@@ -45,7 +45,7 @@ class _CredentialviewState extends State<Credentialview> {
             ),
             TextField(
               controller: cod,
-              decoration: InputDecoration(labelText: 'Código (para administradores)'),
+              decoration: InputDecoration(labelText: 'Código para SignUp'),
               obscureText: true,
             ),
             SizedBox(height: 20),
@@ -53,16 +53,17 @@ class _CredentialviewState extends State<Credentialview> {
               onPressed: () async {
                 try {
                   if (cod.text.isEmpty) {
-                    final userSignUpAnswer = await UserSignUp(name.text, email.text, password.text);
-                    if (userSignUpAnswer == 200) {
+                    final LoginAnswer = await Login(name.text, email.text, password.text, cod.text);
+                    if (LoginAnswer == 200) {
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Credentialview()));
                       showSnack('Usuário cadastrado com sucesso!', true);
                     } else {
                       showSnack('Erro ao cadastrar usuário.', false);
                     }
                   } else {
-                    final admSignUpAnswer = await AdmSignUp(name.text, email.text, password.text, cod.text);
-                    if (admSignUpAnswer == 200) {
-                      showSnack('Administrador cadastrado com sucesso!', true);
+                    final SignUpAnswer = await SignUp(name.text, email.text, password.text, cod.text);
+                    if (SignUpAnswer == 200) {
+                      showSnack('Aluno cadastrado com sucesso!', true);
                     } else {
                       showSnack('Erro ao cadastrar administrador.', false);
                     }
@@ -73,76 +74,6 @@ class _CredentialviewState extends State<Credentialview> {
               },
               child: Text("SignUp"),
             ),
-            SizedBox(height: 10),
-            
-            ElevatedButton(
-              onPressed: () async {
-                try {
-                  final userLoginAnswer = await UserLogin(name.text, email.text, password.text);
-                  if (userLoginAnswer == 200) {
-                    showSnack('Usuário fez login com sucesso', true);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => PageTest()));
-                  }
-                  if(userLoginAnswer == 500){
-                    showSnack('Erro no login do usuário', false);
-                  }
-                }
-                catch (e) {
-                  showSnack('Erro inesperado: $e', false);
-                }}, child: Text("Usuário Login"),),
-
-              ElevatedButton(
-              onPressed: () async {
-                try {
-                  final admLoginAnswer = await AdmLogin(name.text, email.text, password.text);
-                  if (admLoginAnswer == 200) {
-                    showSnack('Administrador fez login com sucesso', true);
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => PageTest()));
-                  }
-                  if(admLoginAnswer == 500){
-                    showSnack('Erro no login do administrador', false);
-                  }
-                }
-                catch (e) {
-                  showSnack('Erro inesperado: $e', false);
-                }}, child: Text("Administrador Login"),),
-                Card(
-                    elevation: 4, // profundidade
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    margin: EdgeInsets.all(16), // espaço externo
-                    child: Padding(
-                      padding: EdgeInsets.all(12),
-                      child: Text('Conteúdo do card'),
-                    ),
-                  ),
-                  Checkbox(
-                    value: true, // estado atual
-                    onChanged: (bool? value) {}, // ação ao mudar
-                    activeColor: Colors.blue, // cor ativa
-                    checkColor: Colors.white, // cor do check
-                  ),
-                  Form(
-                    key: GlobalKey<FormState>(), // chave do formulário
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          decoration: InputDecoration(labelText: 'Senha'),
-                          obscureText: true,
-                          validator: (value) => value!.length < 6 ? 'Mínimo 6 caracteres' : null,
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            // validação aqui
-                          },
-                          child: Text('Enviar'),
-                        ),
-                      ],
-                    ),
-                  )
-
-
-
-
           ],
         ),
       ),
