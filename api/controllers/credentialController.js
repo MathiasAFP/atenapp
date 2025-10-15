@@ -27,6 +27,12 @@ async function credentialControllerSignup(req, res) {
         await credentialModel.doSchoolStudentRelation(school_id, teacher.id);//insert the ids into the relation table
         res.status(200).json({message: "credentialControllerSignup201"});
       }
+
+      else{
+        const bcrypt_password = await bcrypt.hash(password, 10);
+        await credentialModelUserSignup(name, email, bcrypt_password);
+        res.status(200).json({message: "credentialControllerSignup201"});
+      }
     }
 
     catch{
@@ -34,9 +40,30 @@ async function credentialControllerSignup(req, res) {
     }
 };
 
+/*
+-verifica se é de fato um aluno/professor/escola/usuário
+-verificar qual escola é (armazena o id)
+-procura na tabela de relação
+-verifica na tabela aluno/professor pra ver se a senha tá certa
+*/
 async function credentialControllerLogin(req, res) {
+  const {name, password, user_type} = req.body;//A VERIFICAÇÃO SE É ALUNO/PROFESSOR/ESCOLA DEVE SER FEITA AINDA NO CONNECTIONS(FUNÇÃO DIFERENTE PRA CADA UMA [CADA UMA CHAMADA POR UM BOTÃO DIFERENTE DA PÁGINA])
   try {
-    
+    if (user_type == user) {
+      
+    }
+    if (user_type == student) {
+      const student = await credentialModel.credentialModelUserVerification(student, name);
+      if (bcrypt.compare(password, student.password)) {
+        const school_name = await credentialModel.credentialModelLogin(schoolstudent, name)//procura em schollstudent pelo name
+      }
+    }
+    if (user_type == teacher) {
+      
+    }
+    if (user_type == school) {
+      
+    }
   } catch (error) {
     
   }

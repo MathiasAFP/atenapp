@@ -50,6 +50,20 @@ async function credentialModelStudentSignup(name, email, password) {
   });
 }
 
+async function credentialModelUserSignup(name, email, password) {
+  return new Promise((resolve, reject) => {
+    const query = "INSERT INTO user name = ? AND email = ? AND password = ?";
+    db.query(query, [name, email, password], (error, result) => {
+      if (error) {
+        return reject(500);
+      }
+      else {
+        return resolve(200);
+      }
+    });
+  });
+}
+
 // Returns the teacher row matching the provided name.
 // Resolves with the first row object if found, rejects with 500 on error or if not found.
 async function credentialModelSearchTeacher(name) {
@@ -118,5 +132,37 @@ async function credentialModelDoSchoolStudentRelation(school_id, student_id) {
   });
 }
 
+//-----Login part-----
 
-module.exports = {credentialModelWhichSchool, credentialModelTeacherSignup, credentialModelStudentSignup, credentialModelSearchTeacher, credentialModelSearchStudent, credentialModelDoSchoolTeacherRelation, credentialModelDoSchoolStudentRelation};
+async function credentialModelLoginVerification(main_table, name) {
+  return new Promise((resolve, reject) => {
+    const query = "INSERT INTO schoolteacher school_id = ? AND teacher_id = ?";
+    db.query(query, [school_id, student_id], (error, result) => {
+      if (error) {
+        return reject(500);
+      }
+      else {
+        return resolve(200);
+      }//retornar o objeto aluno
+    });
+  });
+}
+
+async function credentialModelLogin(ralation_table, name) {
+  return new Promise((resolve, reject) => {
+    const query = "INSERT INTO schoolteacher school_id = ? AND teacher_id = ?";
+    db.query(query, [school_id, student_id], (error, result) => {
+      if (error) {
+        return reject(500);
+      }
+      else {
+        return resolve(200);
+      }//retornar o objeto aluno
+    });
+  });
+}
+
+
+module.exports = {credentialModelWhichSchool, credentialModelTeacherSignup, credentialModelStudentSignup, credentialModelUserSignup, credentialModelSearchTeacher, credentialModelSearchStudent, credentialModelDoSchoolTeacherRelation, credentialModelDoSchoolStudentRelation,
+  credentialModelLoginVerification
+};
