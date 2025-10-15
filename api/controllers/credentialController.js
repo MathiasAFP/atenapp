@@ -7,16 +7,14 @@ async function SignUpController(req, res) {
     const {name, email, password, cod} = req.body;
     
     try{
-      if (await credentialModel.IsSchool(cod)) {
-        if (await credentialModel.IsTeacher(name, cod)) {
-          
-        } else {
-          
-          res.status(500).json({message:"IsStudent"})
-        }
+      const IsSchool = await credentialModel.IsSchool(cod)
+      const IsTeacher = await credentialModel.IsTeacher(name, cod)
+
+      if (IsSchool == 200) {
+        
       }
-      else{
-        res.status(500).json({message: "Schoolwasnotfind"})
+      if (IsTeacher == 200) {
+        
       }
         
     }
@@ -27,7 +25,7 @@ async function SignUpController(req, res) {
 };
 
 async function LoginController(req, res) {
-  const { name, email, password, position } = req.body;
+  const { name, email, password, cod } = req.body;
   try {
     const user = await credentialModel.UserLoginModel(name, email);
     const match = await bcrypt.compare(password, user.password);
