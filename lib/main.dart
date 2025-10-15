@@ -3,11 +3,12 @@ import 'package:muto_system/views/credentialViews/signupView.dart';
 
 void main() => runApp(myApp());
 
-class myApp extends StatelessWidget{
+// ignore: camel_case_types
+class myApp extends StatelessWidget {
+  const myApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Credentialview(),
-    );
+    return MaterialApp(home: CredentialView());
   }
 }

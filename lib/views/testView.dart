@@ -16,7 +16,7 @@ class _PageTestState extends State<PageTest> {
   }
 
   void carregarNome() async {
-    final resultado = await UserBasicDataLoader();
+    final resultado = UserBasicDataLoader();
     setState(() {
       nome = resultado;
     });
@@ -25,10 +25,7 @@ class _PageTestState extends State<PageTest> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(),
-        title: Text('Resultado'),
-      ),
+      appBar: AppBar(leading: BackButton(), title: Text('Resultado')),
       body: Center(
         child: nome == null
             ? CircularProgressIndicator()

@@ -1,77 +1,163 @@
 import 'package:flutter/material.dart';
-import 'package:muto_system/views/testView.dart';
-import 'package:muto_system/connections/credentialConnection.dart';
+import 'package:flutter/gestures.dart';
+import 'package:muto_system/views/credentialViews/signupView.dart';
+import 'package:muto_system/configs/colors.dart' as ThemeColors;
 
-class Credentialview extends StatefulWidget {
+class CredentialViewLogin extends StatefulWidget {
+  const CredentialViewLogin({super.key});
+
   @override
-  State<Credentialview> createState() => _CredentialviewState();
+  State<CredentialViewLogin> createState() => _CredentialViewLoginState();
 }
 
-class _CredentialviewState extends State<Credentialview> {
-  final TextEditingController name = TextEditingController();
-  final TextEditingController email = TextEditingController();
-  final TextEditingController password = TextEditingController();
-  final TextEditingController cod = TextEditingController();
-
-  void showSnack(String message, bool success) {
-    final snackBar = SnackBar(
-      content: Text(message),
-      backgroundColor: success ? Colors.green : Colors.red,
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
+class _CredentialViewLoginState extends State<CredentialViewLogin> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Cadastro')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextField(
-              controller: name,
-              decoration: InputDecoration(labelText: 'Nome'),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: ThemeColors.Colors.background_black,
+        body: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.asset("assets/img/logoAtena.png", width: 150),
+                  SizedBox(height: 15),
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: "EMAIL",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  TextField(
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: "SENHA",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+
+                  // Esqueceu senha
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      style: ButtonStyle(
+                        overlayColor: WidgetStateProperty.all(
+                          Colors.transparent,
+                        ), // tira o efeito
+                      ),
+                      onPressed: () {},
+                      child: const Text(
+                        "Esqueceu a senha?",
+                        style: TextStyle(fontSize: 14, color: Colors.blue),
+                      ),
+                    ),
+                  ),
+
+                  // Botão login
+                  SizedBox(
+                    width: double.maxFinite,
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: ThemeColors.Colors.background_black,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
+                      onPressed: () {
+                        debugPrint("tentando logar");
+                      },
+                      child: const Text(
+                        "Login",
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Botão Google
+                  // SizedBox(
+                  //   width: double.infinity,
+                  //   child: OutlinedButton.icon(
+                  //     icon: Image.asset(
+                  //       "assets/icons/GoogleLogo.png",
+                  //       height: 25,
+                  //     ),
+                  //     label: const Text(
+                  //       "Login com o Google",
+                  //       style: TextStyle(fontSize: 24),
+                  //     ),
+                  //     style: OutlinedButton.styleFrom(
+                  //       padding: const EdgeInsets.symmetric(vertical: 14),
+                  //       shape: RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.circular(8),
+                  //       ),
+                  //     ),
+                  //     onPressed: () async {
+                  //       final user = await GoogleAuthService()
+                  //           .signInWithGoogle();
+                  //       if (user != null) {
+                  //         debugPrint("Usuário logado: ${user.displayName}");
+                  //         // Navigator.of(context).pushReplacement(
+                  //         //   MaterialPageRoute(builder: (context) => HomeScreen()),
+                  //         // );
+                  //       } else {
+                  //         debugPrint("Login falhou ou foi cancelado.");
+                  //       }
+                  //     },
+                  //   ),
+                  // ),
+                  const SizedBox(height: 20),
+
+                  // Cadastro
+                  RichText(
+                    text: TextSpan(
+                      text: "Você não tem uma conta? ",
+                      style: const TextStyle(color: Colors.black, fontSize: 12),
+                      children: [
+                        TextSpan(
+                          text: "Cadastre-se",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                            color: Colors.blue,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CredentialView(),
+                                ),
+                              );
+                            },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-            TextField(
-              controller: email,
-              decoration: InputDecoration(labelText: 'Email'),
-            ),
-            TextField(
-              controller: password,
-              decoration: InputDecoration(labelText: 'Senha'),
-              obscureText: true,
-            ),
-            TextField(
-              controller: cod,
-              decoration: InputDecoration(labelText: 'Código para SignUp'),
-              obscureText: true,
-            ),
-            SizedBox(height: 20),
-          
-            ElevatedButton(onPressed: () async {
-              try {
-                final SignUpAnswer = await SignUp(name.text, email.text, password.text, cod.text);
-                    if (SignUpAnswer == 200) {
-                      showSnack('Aluno cadastrado com sucesso!', true);
-                    } 
-                    if (SignUpAnswer == 201) {
-                      showSnack('Professor cadastrado com sucesso!', true);
-                    }
-                    else {
-                      showSnack('Erro ao cadastrar', false);
-                    }
-              } catch (e) {
-                showSnack('Erro inesperado: $e', false);
-              }
-            }, child: Column(children: [
-            Text("Fazer login como: "),
-            ElevatedButton(onPressed: (){}, child: Text("Student")),
-            ElevatedButton(onPressed: (){}, child: Text("Teacher")),
-            ElevatedButton(onPressed: (){}, child: Text("School"))
-            ]))
-          ],
+          ),
         ),
       ),
     );
