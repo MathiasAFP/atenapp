@@ -16,13 +16,30 @@ Future<int> signup(name, email, password, school_name, your_code) async {
         "your_code": your_code,
       }),
     );
-    if (res.statusCode == 200) {
-      return 200;
+
+    final responseBody = jsonDecode(res.body);
+
+    switch (responseBody['message']) {
+      case 200:
+        return 200;
+      case 201:
+        return 201;
+      case 202:
+        return 202;
+      case 203:
+        return 203;
+      case 500:
+        return 500;
+      case 501:
+        return 501;
+      case 502:
+        return 502;
+      case 503:
+        return 503;
+      default:
+        return 500;
     }
-    return 500;
-    
-}
-  catch(error){
+  } catch (error) {
     return 500;
   }
 }
