@@ -7,8 +7,14 @@ async function credentialControllerSignup(req, res) {
   const { name, email, password, school_name, your_code } = req.body;
 
   try {
-    const whichSchool = await credentialModel.credentialModelWhichSchool(school_name);
-    const bcrypt_password = await bcrypt.hash(password, 10);
+    let whichSchool = null;
+  try {
+    whichSchool = await credentialModel.credentialModelWhichSchool(school_name);
+  } catch {
+    whichSchool = null; // se não achou, define como null e vai 
+  }
+
+const bcrypt_password = await bcrypt.hash(password, 10);
 
     // se não encontrou escola, trata como usuário normal
     if (!whichSchool) {
