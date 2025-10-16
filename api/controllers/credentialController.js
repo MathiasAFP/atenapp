@@ -53,9 +53,10 @@ async function credentialControllerLogin(req, res) {
       
     }
     if (user_type == student) {
-      const student = await credentialModel.credentialModelUserVerification(student, name);
+      const student = await credentialModel.credentialModelMainTableLoginVerification(student, name);
       if (bcrypt.compare(password, student.password)) {
-        const school_name = await credentialModel.credentialModelLogin(schoolstudent, name)//procura em schollstudent pelo name
+        const school = await credentialModel.credentialModelRelationTableLoginVerification("schoolstudent", "student_id", student.id);
+        //enviar como resposta os dados importantes da escola e do aluno, ou ao menos o id deles
       }
     }
     if (user_type == teacher) {

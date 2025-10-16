@@ -22,7 +22,7 @@ async function credentialModelWhichSchool(school_name) {
 // Resolves with 200 on success, rejects with 500 on error.
 async function credentialModelTeacherSignup(name, email, password) {
   return new Promise((resolve, reject) => {
-    const query = "INSERT INTO teacher name = ? AND email = ? AND password = ?";
+    const query = "INSERT INTO teacher (name, email, password) VALUES (?, ?, ?)";
     db.query(query, [name, email, password], (error, result) => {
       if (error) {
         return reject(500);
@@ -38,7 +38,7 @@ async function credentialModelTeacherSignup(name, email, password) {
 // Resolves with 200 on success, rejects with 500 on error.
 async function credentialModelStudentSignup(name, email, password) {
   return new Promise((resolve, reject) => {
-    const query = "INSERT INTO student name = ? AND email = ? AND password = ?";
+    const query = "INSERT INTO student (name, email, password) VALUES (?, ?, ?)";
     db.query(query, [name, email, password], (error, result) => {
       if (error) {
         return reject(500);
@@ -52,7 +52,7 @@ async function credentialModelStudentSignup(name, email, password) {
 
 async function credentialModelUserSignup(name, email, password) {
   return new Promise((resolve, reject) => {
-    const query = "INSERT INTO user name = ? AND email = ? AND password = ?";
+    const query = "INSERT INTO user (name, email, password) VALUES (?, ?, ?)";
     db.query(query, [name, email, password], (error, result) => {
       if (error) {
         return reject(500);
@@ -104,7 +104,7 @@ async function credentialModelSearchStudent(name) {
 // Resolves with 200 on success, rejects with 500 on error.
 async function credentialModelDoSchoolTeacherRelation(school_id, teacher_id) {
   return new Promise((resolve, reject) => {
-    const query = "INSERT INTO schoolteacher school_id = ? AND teacher_id = ?";
+    const query = "INSERT INTO schoolteacher (school_id, teacher_id) VALUES (?,?)";
     db.query(query, [school_id, teacher_id], (error, result) => {
       if (error) {
         return reject(500);
@@ -120,7 +120,7 @@ async function credentialModelDoSchoolTeacherRelation(school_id, teacher_id) {
 // Resolves with 200 on success, rejects with 500 on error.
 async function credentialModelDoSchoolStudentRelation(school_id, student_id) {
   return new Promise((resolve, reject) => {
-    const query = "INSERT INTO schoolteacher school_id = ? AND teacher_id = ?";
+    const query = "INSERT INTO schoolstudent (school_id, student_id) VALUES (?,?)";
     db.query(query, [school_id, student_id], (error, result) => {
       if (error) {
         return reject(500);
@@ -134,35 +134,29 @@ async function credentialModelDoSchoolStudentRelation(school_id, student_id) {
 
 //-----Login part-----
 
-async function credentialModelLoginVerification(main_table, name) {
+async function credentialModelMainTableLoginVerification(main_table, name) {
   return new Promise((resolve, reject) => {
-    const query = "INSERT INTO schoolteacher school_id = ? AND teacher_id = ?";
-    db.query(query, [school_id, student_id], (error, result) => {
-      if (error) {
-        return reject(500);
-      }
-      else {
-        return resolve(200);
-      }//retornar o objeto aluno
+    const query = `SELECT * FROM \`${main_table}\` WHERE name = ?`;
+    db.query(query, [name], (error, results) => {
+      if (error) return reject(500);
+      if (results && results.length > 0){return resolve(results[0])}
+      else{return reject(501)}
     });
   });
 }
 
-async function credentialModelLogin(ralation_table, name) {
+async function credentialModelRelationTableLoginVerification(relation_table, relation_id, id) {
   return new Promise((resolve, reject) => {
-    const query = "INSERT INTO schoolteacher school_id = ? AND teacher_id = ?";
-    db.query(query, [school_id, student_id], (error, result) => {
-      if (error) {
-        return reject(500);
-      }
-      else {
-        return resolve(200);
-      }//retornar o objeto aluno
+    const query = `SELECT * FROM \`${relation_table}\` WHERE \`${relation_id}\` = ?`;
+    db.query(query, [id], (error, results) => {
+      if (error) return reject(500);
+      if (results && results.length > 0){return resolve(results[0])}
+      else{return reject(501)}
     });
   });
 }
 
 
 module.exports = {credentialModelWhichSchool, credentialModelTeacherSignup, credentialModelStudentSignup, credentialModelUserSignup, credentialModelSearchTeacher, credentialModelSearchStudent, credentialModelDoSchoolTeacherRelation, credentialModelDoSchoolStudentRelation,
-  credentialModelLoginVerification
+  credentialModelMainTableLoginVerification, credentialModelRelationTableLoginVerification
 };
