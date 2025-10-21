@@ -18,14 +18,14 @@ class ProfilePage extends StatelessWidget {
                   height: 200,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/img/example.png'),
+                      image: AssetImage('assets/img/ColorExample.png'),
                       fit: BoxFit.cover,
                     ),
                   ),
                 ),
                 // Foto de perfil
                 const Positioned(
-                  bottom: 0,
+                  bottom: 10,
                   child: CircleAvatar(
                     radius: 65,
                     backgroundImage: AssetImage('assets/img/example.png'),

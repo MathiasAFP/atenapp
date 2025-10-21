@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:muto_system/views/championshipViews/championshipView.dart';
+import 'package:muto_system/views/friendsandschoolViews/friendsAndSchoolView.dart';
+import 'package:muto_system/views/notificationViewTest/notificationViewTest.dart';
 import 'package:muto_system/views/profileViews/profileView.dart';
+import 'package:muto_system/views/subjectsViews/subjectAllView.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -34,12 +38,12 @@ class _HomeViewState extends State<HomeView> {
             _currentIndex = index;
           });
         },
-        children: const [
-          ColoredPage(color: Colors.blue, title: 'Página 1'),
-          ColoredPage(color: Colors.green, title: 'Página 2'),
-          ProfilePage(),
-          ColoredPage(color: Colors.orange, title: 'Página 4'),
-          ColoredPage(color: Colors.purple, title: 'Página 5'),
+        children: [
+          SubjectProgressPage(),
+          const NotificationTest(),
+          const ProfilePage(),
+          ChampionshipView(),
+          FriendsAndSchoolView(),
         ],
       ),
 
