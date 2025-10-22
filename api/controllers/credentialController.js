@@ -3,6 +3,12 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+
+function createJwt(name) {
+    const createdJwt = jwt.sign({ token: name }, process.env.JWT_SECRET, { expiresIn: "24h" });
+    return createdJwt;
+}
+
 async function credentialControllerSignup(req, res) {
     const { name, email, password, schoolName, yourCode } = req.body;
     
@@ -16,8 +22,9 @@ async function credentialControllerSignup(req, res) {
         else if(!schoolName && yourCode){
             return res.status(500).json({ message: 'Todo código tem uma escola!' });
         }
-        else if(await credentialModelMainTableLoginVerification('user', name) || await credentialModelMainTableLoginVerification('student', name) || await credentialModelMainTableLoginVerification('teacher', name)){
-            res.status(500).json({message:"Já existe um usuário com esse nome"})
+        // ERRO 1 e 2 CORRIGIDOS AQUI
+        else if(await credentialModel.credentialModelMainTableLoginVerification('user', name) || await credentialModel.credentialModelMainTableLoginVerification('student', name) || await credentialModel.credentialModelMainTableLoginVerification('teacher', name) || await credentialModel.credentialModelMainTableLoginVerification('school', name)){
+            return res.status(500).json({message:"Já existe um usuário com esse nome"});
         }
 
         const bcrypt_password = await bcrypt.hash(password, 10);
@@ -43,30 +50,20 @@ async function credentialControllerSignup(req, res) {
             return res.status(200).json({ message: 'Aluno cadastrado com sucesso!' });
         }
 
+        if (name == credentialModel.credentialModelSchoolSignup) {
+            
+        }
+
         return res.status(400).json({ message: 'Código inválido!' });
     } catch (error) {
         console.error('credentialControllerSignup error:', error);
         return res.status(500).json({ message: 'Erro no servidor' });
     }
-}
+}   
 
 async function credentialControllerLogin(req, res) {
     const { name, password, userType } = req.body;
-
-    async function existSectionData(params) {
-        //verificar se existe um cookie, pra n precisar fazer o login
-    }
-
-    async function sectionData(name) {
-        const createdJwt = jwt.sign({"name":name}, process.env.JWT_SECRET, {expiresIn:"24h"});
-        res.cookie('token', createdJwt, {
-            httpOnly:true,
-            secure:false,
-            sameSite:'Lax',
-            maxAge:86400000
-        });
-    }
-    
+   
     try {
         if (!name || !password || !userType) {
             return res.status(500).json({ message: 'Campos obrigatórios faltando!' });
@@ -79,8 +76,9 @@ async function credentialControllerLogin(req, res) {
             }
             const passwordMatch = await bcrypt.compare(password, user.password);
             if (passwordMatch) {
-                sectionData(name);
-                return res.status(200).json({ message: "Usuário fez login com sucesso" });
+                const createdJwt = createJwt(name);
+                // CORRIGIDO: enviando como 'token' para o Flutter (como na nossa conversa anterior)
+                return res.status(200).json({ token: createdJwt }); 
             }
             return res.status(500).json({ message: 'Credenciais inválidas' });
         }
@@ -115,7 +113,8 @@ async function credentialControllerLogin(req, res) {
             
             const passwordMatch = await bcrypt.compare(password, school.password);
             if (passwordMatch) {
-                return res.status(200).json({ message: school.id });
+                // CORRIGIDO: chave consistente 'school_id' (como nos outros)
+                return res.status(200).json({ school_id: school.id });
             }
             return res.status(500).json({ message: 'Credenciais inválidas' });
         }

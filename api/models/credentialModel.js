@@ -25,7 +25,20 @@ async function credentialModelTeacherSignup(name, email, password) {
     });
 }
 
-async function credentialModelStudentSignup(name, email, password) {
+async function credentialModelStudentSignup(name, email, password, studentcode, teachercode) {
+    return new Promise((resolve, reject) => {
+        const query = "INSERT INTO student (name, email, password) VALUES (?, ?, ?)";
+        db.query(query, [name, email, password], (error, result) => {
+            if (error) {
+                console.error('credentialModelStudentSignup error:', error);
+                return reject(error);
+            }
+            return resolve(result);
+        });
+    });
+}
+
+async function credentialModelSchoolExist(cod) {
     return new Promise((resolve, reject) => {
         const query = "INSERT INTO student (name, email, password) VALUES (?, ?, ?)";
         db.query(query, [name, email, password], (error, result) => {
@@ -49,6 +62,19 @@ async function credentialModelUserSignup(name, email, password) {
             return resolve(result);
         });
     });
+}
+
+async function credentialModelSchoolSignup(name, email, password){
+    new Promise((resolve, reject) => {
+        const query = "INSERT INTO school (name, email, password) VALUES (?, ?, ?)";
+        db.query(query, [name, email, password], (error, result) => {
+            if (error) {
+                console.error('credentialModelUserSignup error:', error);
+                return reject(error);
+            }
+            return resolve(result);
+        });
+    })
 }
 
 async function credentialModelSearchTeacher(name) {
@@ -109,9 +135,22 @@ async function credentialModelMainTableLoginVerification(main_table, name) {
   return new Promise((resolve, reject) => {
     const query = `SELECT * FROM \`${main_table}\` WHERE name = ?`;
     db.query(query, [name], (error, results) => {
-      if (error) return reject(500);
-      if (results && results.length > 0){return resolve(results[0])}
-      else{return reject(501)}
+      
+      // Se houver um erro de DB, rejeite
+      if (error) {
+        console.error("Erro na query do Model:", error);
+        return reject(error); // Rejeita com o erro real
+      }
+
+      // Se encontrar o usuário, resolva com o usuário
+      if (results && results.length > 0) {
+        return resolve(results[0]);
+      } 
+      
+      // SE NÃO ENCONTRAR, resolva com 'null'
+      else {
+        return resolve(null); // <-- ESTA É A CORREÇÃO
+      }
     });
   });
 }
@@ -128,6 +167,6 @@ async function credentialModelRelationTableLoginVerification(relation_table, rel
 }
 
 
-module.exports = {credentialModelWhichSchool, credentialModelTeacherSignup, credentialModelStudentSignup, credentialModelUserSignup, credentialModelSearchTeacher, credentialModelSearchStudent, credentialModelDoSchoolTeacherRelation, credentialModelDoSchoolStudentRelation,
+module.exports = {credentialModelWhichSchool, credentialModelTeacherSignup, credentialModelStudentSignup, credentialModelUserSignup, credentialModelSchoolSignup, credentialModelSearchTeacher, credentialModelSearchStudent, credentialModelDoSchoolTeacherRelation, credentialModelDoSchoolStudentRelation,
   credentialModelMainTableLoginVerification, credentialModelRelationTableLoginVerification,
 };

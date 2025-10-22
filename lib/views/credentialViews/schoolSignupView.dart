@@ -3,15 +3,17 @@ import 'package:flutter/gestures.dart';
 import 'package:muto_system/connections/credentialConnection.dart';
 import 'package:muto_system/views/credentialViews/loginView.dart';
 import 'package:muto_system/configs/colors.dart' as ThemeColors;
+import 'package:muto_system/views/credentialViews/schoolLoginView.dart';
+import 'package:muto_system/views/credentialViews/signupView.dart';
 
-class CredentialView extends StatefulWidget {
-  const CredentialView({super.key});
+class schoolCredentialView extends StatefulWidget {
+  const schoolCredentialView({super.key});
 
   @override
-  State<CredentialView> createState() => _CredentialViewState();
+  State<schoolCredentialView> createState() => _schoolCredentialViewState();
 }
 
-class _CredentialViewState extends State<CredentialView> {
+class _schoolCredentialViewState extends State<schoolCredentialView> {
   final TextEditingController name = TextEditingController();
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
@@ -170,7 +172,7 @@ class _CredentialViewState extends State<CredentialView> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => CredentialViewLogin(),
+                                  builder: (context) => SchoolCredentialViewLogin(),
                                 ),
                               );
                             },
@@ -182,10 +184,10 @@ class _CredentialViewState extends State<CredentialView> {
                     Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => CredentialViewLogin(),
+                                  builder: (context) => CredentialView(),
                                 ),
                               );
-                  }, child: Text("Para instituições"))
+                  }, child: Text("Para usuários"))
                 ],
               ),
             ),

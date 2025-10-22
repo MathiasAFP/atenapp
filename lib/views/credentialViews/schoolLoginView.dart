@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:muto_system/connections/credentialConnection.dart'; // ADICIONADO
+import 'package:muto_system/views/credentialViews/schoolSignupView.dart';
 import 'package:muto_system/views/credentialViews/signupView.dart';
 import 'package:muto_system/configs/colors.dart' as ThemeColors;
 import 'package:muto_system/views/homeView/homeView.dart';
 
 // Controllers removidos daqui
 
-class CredentialViewLogin extends StatefulWidget {
-  const CredentialViewLogin({super.key});
+class SchoolCredentialViewLogin extends StatefulWidget {
+  const SchoolCredentialViewLogin({super.key});
 
   @override
-  State<CredentialViewLogin> createState() => _CredentialViewLoginState();
+  State<SchoolCredentialViewLogin> createState() => _SchoolCredentialViewLoginState();
 }
 
-class _CredentialViewLoginState extends State<CredentialViewLogin> {
+class _SchoolCredentialViewLoginState extends State<SchoolCredentialViewLogin> {
   // Controllers movidos para cá (como no seu signup)
   final TextEditingController name = TextEditingController();
   final TextEditingController password = TextEditingController();
@@ -203,7 +204,7 @@ class _CredentialViewLoginState extends State<CredentialViewLogin> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => CredentialView(),
+                                  builder: (context) => schoolCredentialView(),
                                 ),
                               );
                             },

@@ -30,9 +30,9 @@ Future<String> signupCredentialConnection(name, email, password, schoolName, you
 }
 
 
-Future<String> loginCredentialConnection(name, password, userType) async {
+Future<String> loginCredentialConnection(name, password, String userType) async {
   try {
-    final url = Uri.parse("http://localhost:3000/credential/signup");
+    final url = Uri.parse("http://localhost:3000/credential/login");
 
     final res = await http.post(
       url,
@@ -46,9 +46,12 @@ Future<String> loginCredentialConnection(name, password, userType) async {
 
     final responseBody = jsonDecode(res.body);
 
-    return responseBody.message;
+    if (res.statusCode == 200) {
+      return responseBody['message'];
+    } else {
+      return responseBody['message'] ?? 'Erro inesperado no servidor';
     }
-   catch (error) {
+  } catch (error) {
     return "Erro inesperado $error";
   }
 }
