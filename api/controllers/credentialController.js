@@ -126,4 +126,12 @@ async function credentialControllerLogin(req, res) {
     }
 }
 
+async function schoolSignupCredentialController(req, res) {
+    const {name, email, password, teacherCode, studentCode} = req.body;
+}
+
+async function schoolLoginCredentialController(req, res) {
+    const {name, password} = req.body;
+}
+
 module.exports = { credentialControllerSignup, credentialControllerLogin };
