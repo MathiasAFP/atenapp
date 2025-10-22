@@ -134,4 +134,6 @@ async function schoolLoginCredentialController(req, res) {
     const {name, password} = req.body;
 }
 
-module.exports = { credentialControllerSignup, credentialControllerLogin };
+module.exports = { credentialControllerSignup, credentialControllerLogin,
+    schoolSignupCredentialController, schoolLoginCredentialController
+};

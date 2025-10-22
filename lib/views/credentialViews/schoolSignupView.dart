@@ -17,8 +17,8 @@ class _schoolCredentialViewState extends State<schoolCredentialView> {
   final TextEditingController name = TextEditingController();
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
-  final TextEditingController schoolname = TextEditingController();
-  final TextEditingController cod = TextEditingController();
+  final TextEditingController teacherCode = TextEditingController();
+  final TextEditingController studentCode = TextEditingController();
 
   void showSnack(String message, bool success) {
     final snackBar = SnackBar(
@@ -84,9 +84,9 @@ class _schoolCredentialViewState extends State<schoolCredentialView> {
                   const SizedBox(height: 12),
 
                   TextField(
-                    controller: schoolname,
+                    controller: teacherCode,
                     decoration: InputDecoration(
-                      labelText: "NOME DA ESCOLA",
+                      labelText: "CÓDIGO DOS PROFESSORES",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
@@ -94,10 +94,10 @@ class _schoolCredentialViewState extends State<schoolCredentialView> {
                   ),
                   SizedBox(height: 12),
                   TextField(
-                    controller: cod,
+                    controller: studentCode,
                     obscureText: true,
                     decoration: InputDecoration(
-                      labelText: "SEU CÓDIGO",
+                      labelText: "CÓDIGO DOS ALUNOS",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
@@ -130,16 +130,19 @@ class _schoolCredentialViewState extends State<schoolCredentialView> {
                   ElevatedButton(
                     onPressed: () async {
                       try {
-                        final SignUpAnswer = await signupCredentialConnection(
+                        final SignUpAnswer = await schoolSignupCredentialConnection(
                           name.text,
                           email.text,
                           password.text,
-                          schoolname.text,
-                          cod.text,
+                          teacherCode.text,
+                          studentCode.text,
                         );
 
                         switch (SignUpAnswer) {
-                          case "Campos obrigatórios faltando!":
+                          case "200":
+                            showSnack(SignUpAnswer, true);
+                            break;
+                          case "500":
                             showSnack(SignUpAnswer, false);
                             break;
                           default:

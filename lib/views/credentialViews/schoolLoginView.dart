@@ -19,7 +19,6 @@ class _SchoolCredentialViewLoginState extends State<SchoolCredentialViewLogin> {
   // Controllers movidos para cá (como no seu signup)
   final TextEditingController name = TextEditingController();
   final TextEditingController password = TextEditingController();
-  final TextEditingController userType = TextEditingController();
 
   // Função showSnack (copiada do seu signup)
   void showSnack(String message, bool success) {
@@ -75,17 +74,6 @@ class _SchoolCredentialViewLoginState extends State<SchoolCredentialViewLogin> {
                   ),
                   const SizedBox(height: 12),
 
-                  TextField(
-                    controller: userType, // ADICIONADO
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: "user, student, teacher, school",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-
                   // Esqueceu senha
                   Align(
                     alignment: Alignment.centerLeft,
@@ -122,17 +110,16 @@ class _SchoolCredentialViewLoginState extends State<SchoolCredentialViewLogin> {
                         try {
                           // Presumi que a função de login se chame 'loginCredentialConnection'
                           final String loginAnswer =
-                              await loginCredentialConnection(
+                              await schoolLoginCredentialConnection(
                             name.text,
-                            password.text,
-                            userType.text,
+                            password.text
                           );
 
                           switch (loginAnswer) {
-                          case "Usuário fez login com sucesso":
+                          case "200":
                             showSnack(loginAnswer, true);
                             break;
-                          case "Usuário não encontrado":
+                          case "500":
                             showSnack(loginAnswer, false);
                             break;
                           default:

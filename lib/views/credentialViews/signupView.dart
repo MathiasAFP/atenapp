@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:muto_system/connections/credentialConnection.dart';
 import 'package:muto_system/views/credentialViews/loginView.dart';
 import 'package:muto_system/configs/colors.dart' as ThemeColors;
+import 'package:muto_system/views/credentialViews/schoolSignupView.dart';
 
 class CredentialView extends StatefulWidget {
   const CredentialView({super.key});
@@ -182,7 +183,7 @@ class _CredentialViewState extends State<CredentialView> {
                     Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => CredentialViewLogin(),
+                                  builder: (context) => schoolCredentialView(),
                                 ),
                               );
                   }, child: Text("Para instituições"))
