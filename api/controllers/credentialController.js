@@ -77,7 +77,6 @@ async function credentialControllerLogin(req, res) {
             const passwordMatch = await bcrypt.compare(password, user.password);
             if (passwordMatch) {
                 const createdJwt = createJwt(name);
-                // CORRIGIDO: enviando como 'token' para o Flutter (como na nossa conversa anterior)
                 return res.status(200).json({ token: createdJwt }); 
             }
             return res.status(500).json({ message: 'Credenciais inválidas' });
@@ -90,7 +89,8 @@ async function credentialControllerLogin(req, res) {
             const passwordMatch = await bcrypt.compare(password, student.password);
             if (passwordMatch) {
                 const school = await credentialModel.credentialModelRelationTableLoginVerification("schoolstudent", "student_id", student.id);
-                return res.status(200).json({ student_id: student.id, school_id: school.school_id });
+                const createdJwt = createJwt(name);
+                return res.status(200).json({ token: createdJwt });
             }
             return res.status(500).json({ message: 'Credenciais inválidas' });
         }
@@ -102,19 +102,8 @@ async function credentialControllerLogin(req, res) {
             const passwordMatch = await bcrypt.compare(password, teacher.password);
             if (passwordMatch) {
                 const school = await credentialModel.credentialModelRelationTableLoginVerification("schoolteacher", "teacher_id", teacher.id);
-                return res.status(200).json({ teacher_id: teacher.id, school_id: school.school_id });
-            }
-            return res.status(500).json({ message: 'Credenciais inválidas' });
-        }
-
-        if (userType === "school") {
-            const school = await credentialModel.credentialModelMainTableLoginVerification("school", name);
-            if (!school) return res.status(500).json({ message: 'Escola não encontrada' });
-            
-            const passwordMatch = await bcrypt.compare(password, school.password);
-            if (passwordMatch) {
-                // CORRIGIDO: chave consistente 'school_id' (como nos outros)
-                return res.status(200).json({ school_id: school.id });
+                const createdJwt = createJwt(name);
+                return res.status(200).json({ token: createdJwt });
             }
             return res.status(500).json({ message: 'Credenciais inválidas' });
         }
