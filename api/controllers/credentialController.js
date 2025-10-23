@@ -4,8 +4,8 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 
-function createJwt(name) {
-    const createdJwt = jwt.sign({ token: name }, process.env.JWT_SECRET, { expiresIn: "24h" });
+function createJwt(name, userType) {
+    const createdJwt = jwt.sign({ name : name , userType : userType}, process.env.JWT_SECRET, { expiresIn: "24h" });
     return createdJwt;
 }
 
@@ -76,7 +76,7 @@ async function credentialControllerLogin(req, res) {
             }
             const passwordMatch = await bcrypt.compare(password, user.password);
             if (passwordMatch) {
-                const createdJwt = createJwt(name);
+                const createdJwt = createJwt(name, userType);
                 return res.status(200).json({ token: createdJwt }); 
             }
             return res.status(500).json({ message: 'Credenciais inválidas' });
@@ -144,6 +144,7 @@ async function schoolSignupCredentialController(req, res) {
 
 async function schoolLoginCredentialController(req, res) {
     const {name, password} = req.body;
+    const userType = "school";
     try {
         if (!name || !password) {
             return res.status(500).json({ message: 'Campos obrigatórios faltando!' });
@@ -154,7 +155,7 @@ async function schoolLoginCredentialController(req, res) {
             }
             const passwordMatch = await bcrypt.compare(password, user.password);
             if (passwordMatch) {
-                const createdJwt = createJwt(name);
+                const createdJwt = createJwt(name, userType);
                 return res.status(200).json({ token: createdJwt }); 
             }
             return res.status(500).json({ message: 'Credenciais inválidas' });
@@ -165,6 +166,15 @@ async function schoolLoginCredentialController(req, res) {
     }
 }
 
+async function teste(req, res) {
+    const {name, userType} = req.userData;
+    const email = await credentialModel.teste(name, userType);
+    if (email) {
+        res.status(200).json({message:email});
+    }
+}
+
 module.exports = { credentialControllerSignup, credentialControllerLogin,
-    schoolSignupCredentialController, schoolLoginCredentialController
+    schoolSignupCredentialController, schoolLoginCredentialController,
+    teste
 };
