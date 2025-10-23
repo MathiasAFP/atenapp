@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:muto_system/configs/colors.dart' as ThemeColors;
-import 'package:muto_system/views/credentialViews/signupView.dart';
+import 'package:muto_system/views/generalViews/signupView.dart';
 import 'package:muto_system/views/test/testeJwt.dart';
 import 'package:muto_system/views/userViews/homeView/homeView.dart';
 import 'package:muto_system/connections/credentialConnection.dart';

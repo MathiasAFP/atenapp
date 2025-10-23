@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:muto_system/configs/colors.dart' as ThemeColors;
-import 'package:muto_system/widgets/CampCard.dart';
+import 'package:muto_system/views/widgets/CampCard.dart';
 
 class ChampionshipPage extends StatefulWidget {
   @override

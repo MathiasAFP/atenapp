@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:muto_system/configs/colors.dart' as ThemeColors;
-import 'package:muto_system/widgets/SubjectLine.dart';
+import 'package:muto_system/views/widgets/SubjectLine.dart';
 
 class SubjectProgressPage extends StatelessWidget {
   const SubjectProgressPage({super.key});

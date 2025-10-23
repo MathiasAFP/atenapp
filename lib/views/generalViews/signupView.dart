@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:muto_system/connections/credentialConnection.dart';
-import 'package:muto_system/views/credentialViews/loginView.dart';
+import 'package:muto_system/views/generalViews/loginView.dart';
 import 'package:muto_system/configs/colors.dart' as ThemeColors;
-import 'package:muto_system/views/credentialViews/schoolSignupView.dart';
+import 'package:muto_system/views/generalViews/schoolSignupView.dart';
 
 class CredentialView extends StatefulWidget {
   const CredentialView({super.key});
