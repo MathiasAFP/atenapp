@@ -1,10 +1,10 @@
-/* import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:muto_system/connections/credentialConnection.dart'; // ADICIONADO
 import 'package:muto_system/views/credentialViews/schoolSignupView.dart';
 import 'package:muto_system/views/credentialViews/signupView.dart';
 import 'package:muto_system/configs/colors.dart' as ThemeColors;
-import 'package:muto_system/views/homeView/homeView.dart';
+import 'package:muto_system/views/userViews/homeView/homeView.dart';
 
 // Controllers removidos daqui
 
@@ -12,7 +12,8 @@ class SchoolCredentialViewLogin extends StatefulWidget {
   const SchoolCredentialViewLogin({super.key});
 
   @override
-  State<SchoolCredentialViewLogin> createState() => _SchoolCredentialViewLoginState();
+  State<SchoolCredentialViewLogin> createState() =>
+      _SchoolCredentialViewLoginState();
 }
 
 class _SchoolCredentialViewLoginState extends State<SchoolCredentialViewLogin> {
@@ -111,21 +112,21 @@ class _SchoolCredentialViewLoginState extends State<SchoolCredentialViewLogin> {
                           // Presumi que a função de login se chame 'loginCredentialConnection'
                           final String loginAnswer =
                               await schoolLoginCredentialConnection(
-                            name.text,
-                            password.text
-                          );
+                                name.text,
+                                password.text,
+                              );
 
                           switch (loginAnswer) {
-                          case "200":
-                            showSnack(loginAnswer, true);
-                            break;
-                          case "500":
-                            showSnack(loginAnswer, false);
-                            break;
-                          default:
-                          showSnack('Algo deu errado', false);
-                          break;
-                        }
+                            case "200":
+                              showSnack(loginAnswer, true);
+                              break;
+                            case "500":
+                              showSnack(loginAnswer, false);
+                              break;
+                            default:
+                              showSnack('Algo deu errado', false);
+                              break;
+                          }
 
                           // Verificamos a resposta
                           // Assumindo que erros são strings curtas e o token (sucesso) é uma string longa
@@ -134,23 +135,25 @@ class _SchoolCredentialViewLoginState extends State<SchoolCredentialViewLogin> {
                               loginAnswer == "Usuário não encontrado") {
                             // Se for um erro conhecido, mostre o snack
                             showSnack(loginAnswer, false);
-                          } else if (loginAnswer.length >
-                              40) { // Se for uma string longa (token)
+                          } else if (loginAnswer.length > 40) {
+                            // Se for uma string longa (token)
                             // Sucesso, navegue para a HomeView
                             // Use pushReplacement para não deixar o usuário voltar para o login
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      HomeView(token: loginAnswer)),
+                                builder: (context) =>
+                                    HomeView(token: loginAnswer),
+                              ),
                             );
                           } else {
                             // Se for qualquer outra resposta inesperada
                             showSnack(
-                                loginAnswer.isNotEmpty
-                                    ? loginAnswer
-                                    : 'Algo deu errado no login',
-                                false);
+                              loginAnswer.isNotEmpty
+                                  ? loginAnswer
+                                  : 'Algo deu errado no login',
+                              false,
+                            );
                           }
                         } catch (e) {
                           showSnack('Erro inesperado: $e', false);
@@ -207,4 +210,5 @@ class _SchoolCredentialViewLoginState extends State<SchoolCredentialViewLogin> {
       ),
     );
   }
-}*/
+}
+*/

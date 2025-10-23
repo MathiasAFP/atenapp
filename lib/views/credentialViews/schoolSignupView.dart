@@ -15,6 +15,8 @@ class schoolCredentialView extends StatefulWidget {
 
 class _schoolCredentialViewState extends State<schoolCredentialView> {
   final TextEditingController name = TextEditingController();
+  final TextEditingController schoolCode = TextEditingController();
+
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
   final TextEditingController teacherCode = TextEditingController();
@@ -130,13 +132,15 @@ class _schoolCredentialViewState extends State<schoolCredentialView> {
                   ElevatedButton(
                     onPressed: () async {
                       try {
-                        final SignUpAnswer = await schoolSignupCredentialConnection(
-                          name.text,
-                          email.text,
-                          password.text,
-                          teacherCode.text,
-                          studentCode.text,
-                        );
+                        final SignUpAnswer =
+                            await schoolSignupCredentialConnection(
+                              name.text,
+                              email.text,
+                              password.text,
+                              schoolCode.text,
+                              teacherCode.text,
+                              studentCode.text,
+                            );
 
                         switch (SignUpAnswer) {
                           case "200":
@@ -146,9 +150,8 @@ class _schoolCredentialViewState extends State<schoolCredentialView> {
                             showSnack(SignUpAnswer, false);
                             break;
                           default:
-                          showSnack('Algo deu errado', false);
+                            showSnack('Algo deu errado', false);
                         }
-                        
                       } catch (e) {
                         showSnack('Erro inesperado: $e', false);
                       }
@@ -175,7 +178,8 @@ class _schoolCredentialViewState extends State<schoolCredentialView> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => SchoolCredentialViewLogin(),
+                                  builder: (context) =>
+                                      SchoolCredentialViewLogin(),
                                 ),
                               );
                             },
@@ -183,14 +187,17 @@ class _schoolCredentialViewState extends State<schoolCredentialView> {
                       ],
                     ),
                   ),
-                  ElevatedButton(onPressed: (){
-                    Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => CredentialView(),
-                                ),
-                              );
-                  }, child: Text("Para usuários"))
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => CredentialView(),
+                        ),
+                      );
+                    },
+                    child: Text("Para usuários"),
+                  ),
                 ],
               ),
             ),

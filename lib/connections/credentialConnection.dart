@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-const String baseUrl = "http://localhost:3000"; 
+const String baseUrl = "http://localhost:3000";
 
 Future<void> saveTokenCredentialConnection(String token) async {
   final prefs = await SharedPreferences.getInstance();
@@ -11,12 +11,18 @@ Future<void> saveTokenCredentialConnection(String token) async {
 
 Future<String?> getToken() async {
   final prefs = await SharedPreferences.getInstance();
-  return prefs.getString("token"); 
+  return prefs.getString("token");
 }
 
-Future<String> signupCredentialConnection(name, email, password, schoolName, yourCode) async {
+Future<String> signupCredentialConnection(
+  name,
+  email,
+  password,
+  schoolName,
+  yourCode,
+) async {
   try {
-    final url = Uri.parse("$baseUrl/credential/schoolsignup"); 
+    final url = Uri.parse("$baseUrl/credential/schoolsignup");
 
     final res = await http.post(
       url,
@@ -48,7 +54,7 @@ Future<String> signupCredentialConnection(name, email, password, schoolName, you
 
 Future<String> loginCredentialConnection(name, password, userType) async {
   try {
-    final url = Uri.parse("$baseUrl/credential/login"); 
+    final url = Uri.parse("$baseUrl/credential/login");
 
     final res = await http.post(
       url,
@@ -76,7 +82,14 @@ Future<String> loginCredentialConnection(name, password, userType) async {
   }
 }
 
-Future<String> schoolSignupCredentialConnection(name, email, password, schoolCode, teacherCode, studentCode) async {
+Future<String> schoolSignupCredentialConnection(
+  name,
+  email,
+  password,
+  schoolCode,
+  teacherCode,
+  studentCode,
+) async {
   try {
     final url = Uri.parse("$baseUrl/credential/schoolsignup");
 
@@ -87,7 +100,7 @@ Future<String> schoolSignupCredentialConnection(name, email, password, schoolCod
         "name": name,
         "email": email,
         "password": password,
-        "schoolCode":schoolCode,
+        "schoolCode": schoolCode,
         "teacherCode": teacherCode,
         "studentCode": studentCode,
       }),
@@ -116,10 +129,7 @@ Future<String> schoolLoginCredentialConnection(name, password) async {
     final res = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        "name": name,
-        "password": password,
-      }),
+      body: jsonEncode({"name": name, "password": password}),
     );
 
     final responseBody = jsonDecode(res.body);
@@ -129,7 +139,8 @@ Future<String> schoolLoginCredentialConnection(name, password) async {
       if (token is String) {
         await saveTokenCredentialConnection(token);
       }
-      return responseBody['message'] ?? 'Login da escola realizado com sucesso.';
+      return responseBody['message'] ??
+          'Login da escola realizado com sucesso.';
     } else {
       return responseBody['message'] ?? 'Erro no login da escola.';
     }
@@ -141,12 +152,12 @@ Future<String> schoolLoginCredentialConnection(name, password) async {
 Future<String> teste() async {
   try {
     final jwtToken = await getToken();
-    
+
     if (jwtToken == null || jwtToken.isEmpty) {
-        return "Erro: Usuário não autenticado. Faça login primeiro.";
+      return "Erro: Usuário não autenticado. Faça login primeiro.";
     }
-    
-    final url = Uri.parse("$baseUrl/credential/teste"); 
+
+    final url = Uri.parse("$baseUrl/credential/teste");
 
     final res = await http.post(
       url,

@@ -1,10 +1,10 @@
-/*import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:muto_system/connections/credentialConnection.dart'; // ADICIONADO
 import 'package:muto_system/configs/colors.dart' as ThemeColors;
-import 'package:muto_system/views/userViews/credentialViews/signupView.dart';
+import 'package:muto_system/views/credentialViews/signupView.dart';
+import 'package:muto_system/views/test/testeJwt.dart';
 import 'package:muto_system/views/userViews/homeView/homeView.dart';
-// Controllers removidos daqui
+import 'package:muto_system/connections/credentialConnection.dart';
 
 class CredentialViewLogin extends StatefulWidget {
   const CredentialViewLogin({super.key});
@@ -14,18 +14,95 @@ class CredentialViewLogin extends StatefulWidget {
 }
 
 class _CredentialViewLoginState extends State<CredentialViewLogin> {
-  // Controllers movidos para cá (como no seu signup)
-  final TextEditingController name = TextEditingController();
-  final TextEditingController password = TextEditingController();
-  final TextEditingController userType = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
-  // Função showSnack (copiada do seu signup)
+  String? selectedUserType = 'user';
+  final List<String> userTypes = ['user', 'student', 'teacher', 'school'];
+
   void showSnack(String message, bool success) {
     final snackBar = SnackBar(
       content: Text(message),
       backgroundColor: success ? Colors.green : Colors.red,
+      duration: const Duration(seconds: 3),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _login() async {
+    final name = nameController.text.trim();
+    final password = passwordController.text;
+    final userType = selectedUserType;
+
+    if (name.isEmpty || password.isEmpty || userType == null) {
+      showSnack(
+        'Por favor, preencha todos os campos e selecione o tipo de usuário.',
+        false,
+      );
+      return;
+    }
+
+    showSnack('Tentando logar...', true);
+    FocusScope.of(context).unfocus();
+
+    try {
+      final dynamic response = await loginCredentialConnection(
+        name,
+        password,
+        userType,
+      );
+
+      // Se sua connection retorna Map com 'success' e 'message', trate assim
+      if (response is Map<String, dynamic>) {
+        final bool success = response['success'] == true;
+        final String message = (response['message'] is String)
+            ? response['message'] as String
+            : (success ? 'Sucesso no login' : 'Erro no login');
+
+        if (success) {
+          showSnack(message, true);
+          final dynamic data = response['data'];
+          final String token = (data is Map && data['token'] is String)
+              ? data['token'] as String
+              : 'TOKEN_FICTICIO';
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomeView(token: token)),
+          );
+          return;
+        } else {
+          showSnack(message, false);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const UserProfileScreen()),
+          );
+          return;
+        }
+      }
+
+      // Se a connection retorna diretamente um token string ou outro formato, trate conforme necessário
+      if (response is String && response.isNotEmpty) {
+        // se for token puro
+        final String token = response;
+        showSnack('Login realizado', true);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeView(token: token)),
+        );
+        return;
+      }
+
+      showSnack('Resposta inválida do servidor', false);
+    } catch (e) {
+      showSnack('Erro ao conectar-se: ${e.toString()}', false);
+    }
   }
 
   @override
@@ -49,9 +126,10 @@ class _CredentialViewLoginState extends State<CredentialViewLogin> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Image.asset("assets/img/logoAtena.png", width: 150),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
+
                   TextField(
-                    controller: name, // ADICIONADO
+                    controller: nameController,
                     decoration: InputDecoration(
                       labelText: "NOME",
                       border: OutlineInputBorder(
@@ -62,8 +140,8 @@ class _CredentialViewLoginState extends State<CredentialViewLogin> {
                   const SizedBox(height: 12),
 
                   TextField(
-                    controller: password, // ADICIONADO
-                    obscureText: true, // ADICIONADO
+                    controller: passwordController,
+                    obscureText: true,
                     decoration: InputDecoration(
                       labelText: "SENHA",
                       border: OutlineInputBorder(
@@ -73,25 +151,43 @@ class _CredentialViewLoginState extends State<CredentialViewLogin> {
                   ),
                   const SizedBox(height: 12),
 
-                  TextField(
-                    controller: userType, // ADICIONADO
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: "user, student, teacher, school",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        isExpanded: true,
+                        value: selectedUserType,
+                        hint: const Text("Selecione o Tipo de Usuário"),
+                        items: userTypes.map((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value.toUpperCase()),
+                          );
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedUserType = newValue;
+                          });
+                        },
                       ),
                     ),
                   ),
+                  const SizedBox(height: 12),
 
-                  // Esqueceu senha
                   Align(
                     alignment: Alignment.centerLeft,
                     child: TextButton(
                       style: ButtonStyle(
-                        overlayColor: WidgetStateProperty.all(
+                        overlayColor: MaterialStateProperty.all(
                           Colors.transparent,
-                        ), // tira o efeito
+                        ),
                       ),
                       onPressed: () {},
                       child: const Text(
@@ -101,9 +197,8 @@ class _CredentialViewLoginState extends State<CredentialViewLogin> {
                     ),
                   ),
 
-                  // Botão login
                   SizedBox(
-                    width: double.maxFinite,
+                    width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
@@ -114,79 +209,16 @@ class _CredentialViewLoginState extends State<CredentialViewLogin> {
                         ),
                         padding: const EdgeInsets.symmetric(vertical: 14),
                       ),
-                      // LÓGICA DO ONPRESSED ATUALIZADA
-                      onPressed: () async {
-                        debugPrint("tentando logar");
-                        try {
-                          // Presumi que a função de login se chame 'loginCredentialConnection'
-                          final String loginAnswer =
-                              await loginCredentialConnection(
-                            name.text,
-                            password.text,
-                            userType.text,
-                            userType.text,
-                            userType.text,
-                          );
-
-                          switch (loginAnswer) {
-                          case "Usuário fez login com sucesso":
-                            showSnack(loginAnswer, true);
-                            break;
-                          case "Usuário não encontrado":
-                            showSnack(loginAnswer, false);
-                            break;
-                          default:
-                          showSnack('Algo deu errado', false);
-                          break;
-                        }
-
-                          // Verificamos a resposta
-                          // Assumindo que erros são strings curtas e o token (sucesso) é uma string longa
-                          if (loginAnswer == "Campos obrigatórios faltando!" ||
-                              loginAnswer == "Credenciais inválidas" ||
-                              loginAnswer == "Usuário não encontrado") {
-                            // Se for um erro conhecido, mostre o snack
-                            showSnack(loginAnswer, false);
-                          } else if (loginAnswer.length >
-                              40) { // Se for uma string longa (token)
-                            // Sucesso, navegue para a HomeView
-                            // Use pushReplacement para não deixar o usuário voltar para o login
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      HomeView(token: loginAnswer)),
-                            );
-                          } else {
-                            // Se for qualquer outra resposta inesperada
-                            showSnack(
-                                loginAnswer.isNotEmpty
-                                    ? loginAnswer
-                                    : 'Algo deu errado no login',
-                                false);
-                          }
-                        } catch (e) {
-                          showSnack('Erro inesperado: $e', false);
-                        }
-                      },
+                      onPressed: _login,
                       child: const Text(
                         "Login",
                         style: TextStyle(fontSize: 24),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 12),
 
-                  // Botão Google (Mantido comentado como no original)
-                  // SizedBox(
-                  //   width: double.infinity,
-                  //   child: OutlinedButton.icon(
-                  //     ...
-                  //   ),
-                  // ),
                   const SizedBox(height: 20),
 
-                  // Cadastro
                   RichText(
                     text: TextSpan(
                       text: "Você não tem uma conta? ",
@@ -220,4 +252,4 @@ class _CredentialViewLoginState extends State<CredentialViewLogin> {
       ),
     );
   }
-}*/
+}

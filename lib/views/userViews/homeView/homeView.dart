@@ -3,7 +3,6 @@ import 'package:muto_system/views/studentViews/championshipViews/championshipVie
 import 'package:muto_system/views/studentViews/friendsandschoolViews/friendsAndSchoolView.dart';
 import 'package:muto_system/views/studentViews/profileViews/profileView.dart';
 import 'package:muto_system/views/studentViews/subjectsViews/subjectAllView.dart';
-import 'package:muto_system/views/userViews/credentialViews/signupView.dart';
 
 class HomeView extends StatefulWidget {
   final String token;
