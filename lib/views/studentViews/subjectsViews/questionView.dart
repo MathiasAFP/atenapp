@@ -6,7 +6,6 @@ class QuestaoCard extends StatefulWidget {
   final String textoQuestao;
   final List<String> opcoes;
   final Function(String opcaoSelecionada)? onConfirmar;
-  // A propriedade imagemFundoAsset não é mais usada no layout estilizado
   final String imagemFundoAsset;
 
   const QuestaoCard({
@@ -18,7 +17,6 @@ class QuestaoCard extends StatefulWidget {
     this.imagemFundoAsset = 'assets/image_d8ed45_background.png',
   });
 
-  /// Cria o card a partir de um modelo genérico de questão
   factory QuestaoCard.fromModel({
     required QuestionModel question,
     required String tituloMateria,
@@ -27,7 +25,6 @@ class QuestaoCard extends StatefulWidget {
     Function(String opcaoSelecionada)? onConfirmar,
     String imagemFundoAsset = 'assets/image_d8ed45_background.png',
   }) {
-    // Mantendo a factory para compatibilidade, mesmo que a imagem não seja usada
     return QuestaoCard(
       tituloMateria: tituloMateria,
       textoQuestao: textoQuestao,
@@ -44,32 +41,27 @@ class QuestaoCard extends StatefulWidget {
 class _QuestaoCardState extends State<QuestaoCard> {
   String? _opcaoSelecionada;
 
-  // Cores fixas do tema (Aprimoradas para melhor contraste e modernidade)
-  static const Color _corFundoPrincipal = Color(
-    0xFF191D26,
-  ); // Fundo mais escuro
-  static const Color _corCardPrincipal = Color(
-    0xFF22283A,
-  ); // Cor principal do card
-  static const Color _corTextoClaro = Colors.white;
-  static const Color _corTextoSecundario = Color(
-    0xFF90A4AE,
-  ); // Cinza mais suave
-  static const Color _corDestaque = Color(
-    0xFF5E81AC,
-  ); // Azul escuro moderno (Substitui _corBotaoConfirmar)
-  static const Color _corTituloQuestao = Color(
-    0xFF708090,
-  ); // Cinza azulado para detalhes
+  // Remova as constantes de cores fixas aqui
 
   @override
   Widget build(BuildContext context) {
-    // 1. Header (Topo) estilizado com gradiente
+    // Definição das cores baseadas no tema
+    final colorScheme = Theme.of(context).colorScheme;
+    final corFundoPrincipal = colorScheme.background;
+    final corCardPrincipal = colorScheme.surface;
+    final corTextoClaro = colorScheme.onSurface; // Texto primário
+    final corTextoSecundario = colorScheme.onSurface.withOpacity(
+      0.7,
+    ); // Texto secundário
+    final corDestaque = colorScheme.primary; // Cor de destaque/Primary
+    final corTituloQuestao = colorScheme.onSurface.withOpacity(0.5);
+
     final headerWidget = Container(
       padding: const EdgeInsets.only(top: 60, bottom: 30, left: 20, right: 20),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [Color(0xFF1F222B), Color(0xFF191D26)],
+          // Use cores do tema ou um gradiente que adapte
+          colors: [corFundoPrincipal.withOpacity(0.9), corFundoPrincipal],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
@@ -88,7 +80,7 @@ class _QuestaoCardState extends State<QuestaoCard> {
             Align(
               alignment: Alignment.topLeft,
               child: IconButton(
-                icon: const Icon(Icons.arrow_back_ios, color: _corTextoClaro),
+                icon: Icon(Icons.arrow_back_ios, color: corTextoClaro),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ),
@@ -96,19 +88,19 @@ class _QuestaoCardState extends State<QuestaoCard> {
             Text(
               widget.tituloMateria.toUpperCase(),
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: _corTextoSecundario,
+              style: TextStyle(
+                color: corTextoSecundario,
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
                 letterSpacing: 1.5,
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
+            Text(
               'Questão de Múltipla Escolha',
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: _corTextoClaro,
+                color: corTextoClaro,
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
               ),
@@ -118,13 +110,11 @@ class _QuestaoCardState extends State<QuestaoCard> {
       ),
     );
 
-    // 2. Card Principal do Corpo
     final cardBody = Container(
       padding: const EdgeInsets.all(20.0),
-      // Bordas arredondadas e cor principal
-      decoration: const BoxDecoration(
-        color: _corCardPrincipal,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+      decoration: BoxDecoration(
+        color: corCardPrincipal,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,45 +122,45 @@ class _QuestaoCardState extends State<QuestaoCard> {
           Text(
             'Enem PPL | M0516',
             style: TextStyle(
-              color: _corTituloQuestao,
+              color: corTituloQuestao,
               fontSize: 14,
               fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 16),
 
-          // Texto da Questão com estilo
           Text(
             widget.textoQuestao,
             textAlign: TextAlign.justify,
-            style: const TextStyle(
-              color: _corTextoClaro,
-              fontSize: 18, // Aumentado para melhor leitura
-              height: 1.4,
-            ),
+            style: TextStyle(color: corTextoClaro, fontSize: 18, height: 1.4),
           ),
           const SizedBox(height: 24),
 
-          // Opções de múltipla escolha estilizadas
-          ...widget.opcoes.map((opcao) => _buildOptionTile(opcao)),
+          ...widget.opcoes.map(
+            (opcao) => _buildOptionTile(
+              opcao,
+              corDestaque,
+              corCardPrincipal,
+              corTextoClaro,
+              corTextoSecundario,
+            ),
+          ),
           const SizedBox(height: 30),
 
-          // Botão Confirmar estilizado com gradiente
           SizedBox(
             width: double.infinity,
             height: 55,
             child: DecoratedBox(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                // Gradiente para o botão principal
                 gradient: LinearGradient(
-                  colors: [_corDestaque, _corDestaque.withOpacity(0.8)],
+                  colors: [corDestaque, corDestaque.withOpacity(0.8)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: _corDestaque.withOpacity(
+                    color: corDestaque.withOpacity(
                       _opcaoSelecionada != null ? 0.5 : 0.1,
                     ),
                     blurRadius: 15,
@@ -184,8 +174,7 @@ class _QuestaoCardState extends State<QuestaoCard> {
                     ? () => widget.onConfirmar!(_opcaoSelecionada!)
                     : null,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors
-                      .transparent, // Transparente para mostrar o DecoratedBox
+                  backgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -195,7 +184,7 @@ class _QuestaoCardState extends State<QuestaoCard> {
                 child: Text(
                   'Confirmar Resposta',
                   style: TextStyle(
-                    color: _corTextoClaro,
+                    color: corTextoClaro,
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -208,12 +197,11 @@ class _QuestaoCardState extends State<QuestaoCard> {
     );
 
     return Scaffold(
-      backgroundColor: _corFundoPrincipal,
+      backgroundColor: corFundoPrincipal,
       body: SingleChildScrollView(
         child: Column(
           children: [
             headerWidget,
-            // Adiciona um pequeno espaçamento negativo para o card se sobrepor um pouco ao header
             Transform.translate(offset: const Offset(0, -20), child: cardBody),
           ],
         ),
@@ -221,8 +209,14 @@ class _QuestaoCardState extends State<QuestaoCard> {
     );
   }
 
-  /// Constrói o widget de opção individual (ListTile aprimorado)
-  Widget _buildOptionTile(String opcao) {
+  // Modifique o método para aceitar as cores como parâmetro (ou use Theme.of(context) diretamente)
+  Widget _buildOptionTile(
+    String opcao,
+    Color corDestaque,
+    Color corCardPrincipal,
+    Color corTextoClaro,
+    Color corTextoSecundario,
+  ) {
     final isSelected = _opcaoSelecionada == opcao;
 
     return Padding(
@@ -237,20 +231,18 @@ class _QuestaoCardState extends State<QuestaoCard> {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
-            color: isSelected
-                ? _corDestaque.withOpacity(0.2)
-                : _corCardPrincipal, // Fundo sutil ao selecionar
+            color: isSelected ? corDestaque.withOpacity(0.2) : corCardPrincipal,
             border: Border.all(
               color: isSelected
-                  ? _corDestaque
-                  : _corTextoSecundario.withOpacity(0.3),
+                  ? corDestaque
+                  : corTextoSecundario.withOpacity(0.3),
               width: 1.5,
             ),
             borderRadius: BorderRadius.circular(12),
             boxShadow: isSelected
                 ? [
                     BoxShadow(
-                      color: _corDestaque.withOpacity(0.15),
+                      color: corDestaque.withOpacity(0.15),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
@@ -259,31 +251,29 @@ class _QuestaoCardState extends State<QuestaoCard> {
           ),
           child: Row(
             children: [
-              // Círculo de seleção
               Container(
                 width: 24,
                 height: 24,
                 decoration: BoxDecoration(
-                  color: isSelected ? _corDestaque : Colors.transparent,
+                  color: isSelected ? corDestaque : Colors.transparent,
                   border: Border.all(
                     color: isSelected
-                        ? _corDestaque
-                        : _corTextoSecundario.withOpacity(0.6),
+                        ? corDestaque
+                        : corTextoSecundario.withOpacity(0.6),
                     width: 2,
                   ),
-                  borderRadius: BorderRadius.circular(12), // Círculo
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: isSelected
-                    ? const Icon(Icons.check, color: _corTextoClaro, size: 16)
+                    ? Icon(Icons.check, color: corTextoClaro, size: 16)
                     : null,
               ),
               const SizedBox(width: 16),
-              // Texto da Opção
               Expanded(
                 child: Text(
                   opcao,
                   style: TextStyle(
-                    color: isSelected ? _corTextoClaro : _corTextoSecundario,
+                    color: isSelected ? corTextoClaro : corTextoSecundario,
                     fontSize: 16,
                     fontWeight: isSelected
                         ? FontWeight.bold
