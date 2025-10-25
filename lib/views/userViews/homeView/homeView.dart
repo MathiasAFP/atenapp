@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:muto_system/views/studentViews/championshipViews/championshipView.dart';
 import 'package:muto_system/views/studentViews/friendsandschoolViews/friendsAndSchoolView.dart';
 import 'package:muto_system/views/studentViews/profileViews/profileView.dart';
-import 'package:muto_system/views/studentViews/subjectsViews/subjectAllView.dart';
+import 'package:muto_system/views/studentViews/subjectsViews/subjectView.dart';
 
 class HomeView extends StatefulWidget {
   final String token;
