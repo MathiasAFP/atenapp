@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:muto_system/configs/colors.dart' as ThemeColors;
 import 'package:muto_system/views/generalViews/signupView.dart';
-import 'package:muto_system/views/test/testeJwt.dart';
 import 'package:muto_system/views/userViews/homeView/homeView.dart';
 import 'package:muto_system/connections/credentialConnection.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CredentialViewLogin extends StatefulWidget {
   const CredentialViewLogin({super.key});
@@ -19,6 +19,7 @@ class _CredentialViewLoginState extends State<CredentialViewLogin> {
 
   String? selectedUserType = 'user';
   final List<String> userTypes = ['user', 'student', 'teacher', 'school'];
+  bool isLoading = false;
 
   void showSnack(String message, bool success) {
     final snackBar = SnackBar(
@@ -29,6 +30,58 @@ class _CredentialViewLoginState extends State<CredentialViewLogin> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
+  Future<void> _login() async {
+    final name = nameController.text.trim();
+    final password = passwordController.text;
+    final userType = selectedUserType;
+
+    if (name.isEmpty || password.isEmpty || userType == null) {
+      showSnack('Preencha todos os campos.', false);
+      return;
+    }
+
+    setState(() => isLoading = true);
+    FocusScope.of(context).unfocus();
+
+    try {
+      final String response = await loginCredentialConnection(
+        name,
+        password,
+        userType,
+      );
+
+      final prefs = await SharedPreferences.getInstance();
+      final savedToken = prefs.getString('token');
+
+      final bool success =
+          (savedToken != null && savedToken.isNotEmpty) ||
+          response.toLowerCase().contains('sucesso');
+
+      if (!mounted) return;
+      setState(() => isLoading = false);
+
+      if (success) {
+        showSnack(
+          response.isNotEmpty ? response : 'Login realizado com sucesso!',
+          true,
+        );
+
+        final tokenToSend = savedToken ?? '';
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => HomeView(token: tokenToSend)),
+        );
+      } else {
+        showSnack(response.isNotEmpty ? response : 'Erro no login.', false);
+      }
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => isLoading = false);
+      showSnack('Erro ao conectar-se: ${e.toString()}', false);
+    }
+  }
+
   @override
   void dispose() {
     nameController.dispose();
@@ -36,81 +89,10 @@ class _CredentialViewLoginState extends State<CredentialViewLogin> {
     super.dispose();
   }
 
-  Future<void> _login() async {
-    final name = nameController.text.trim();
-    final password = passwordController.text;
-    final userType = selectedUserType;
-
-    if (name.isEmpty || password.isEmpty || userType == null) {
-      showSnack(
-        'Por favor, preencha todos os campos e selecione o tipo de usuário.',
-        false,
-      );
-      return;
-    }
-
-    showSnack('Tentando logar...', true);
-    FocusScope.of(context).unfocus();
-
-    try {
-      final dynamic response = await loginCredentialConnection(
-        name,
-        password,
-        userType,
-      );
-
-      // Se sua connection retorna Map com 'success' e 'message', trate assim
-      if (response is Map<String, dynamic>) {
-        final bool success = response['success'] == true;
-        final String message = (response['message'] is String)
-            ? response['message'] as String
-            : (success ? 'Sucesso no login' : 'Erro no login');
-
-        if (success) {
-          showSnack(message, true);
-          final dynamic data = response['data'];
-          final String token = (data is Map && data['token'] is String)
-              ? data['token'] as String
-              : 'TOKEN_FICTICIO';
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomeView(token: token)),
-          );
-          return;
-        } else {
-          showSnack(message, false);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const UserProfileScreen()),
-          );
-          return;
-        }
-      }
-
-      // Se a connection retorna diretamente um token string ou outro formato, trate conforme necessário
-      if (response is String && response.isNotEmpty) {
-        // se for token puro
-        final String token = response;
-        showSnack('Login realizado', true);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeView(token: token)),
-        );
-        return;
-      }
-
-      showSnack('Resposta inválida do servidor', false);
-    } catch (e) {
-      showSnack('Erro ao conectar-se: ${e.toString()}', false);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: ThemeColors.Colors.background_black,
         body: Center(
@@ -151,92 +133,65 @@ class _CredentialViewLoginState extends State<CredentialViewLogin> {
                   ),
                   const SizedBox(height: 12),
 
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 5,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        isExpanded: true,
-                        value: selectedUserType,
-                        hint: const Text("Selecione o Tipo de Usuário"),
-                        items: userTypes.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value.toUpperCase()),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedUserType = newValue;
-                          });
-                        },
+                  DropdownButtonFormField<String>(
+                    value: selectedUserType,
+                    items: userTypes
+                        .map(
+                          (type) => DropdownMenuItem(
+                            value: type,
+                            child: Text(type.toUpperCase()),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (val) => setState(() {
+                      selectedUserType = val;
+                    }),
+                    decoration: InputDecoration(
+                      labelText: "TIPO DE USUÁRIO",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 12),
-
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: TextButton(
-                      style: ButtonStyle(
-                        overlayColor: MaterialStateProperty.all(
-                          Colors.transparent,
-                        ),
-                      ),
-                      onPressed: () {},
-                      child: const Text(
-                        "Esqueceu a senha?",
-                        style: TextStyle(fontSize: 14, color: Colors.blue),
-                      ),
-                    ),
-                  ),
+                  const SizedBox(height: 16),
 
                   SizedBox(
                     width: double.infinity,
                     height: 50,
                     child: ElevatedButton(
+                      onPressed: isLoading ? null : _login,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: ThemeColors.Colors.background_black,
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
                       ),
-                      onPressed: _login,
-                      child: const Text(
-                        "Login",
-                        style: TextStyle(fontSize: 24),
-                      ),
+                      child: isLoading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text(
+                              "Entrar",
+                              style: TextStyle(fontSize: 20),
+                            ),
                     ),
                   ),
-
                   const SizedBox(height: 20),
 
                   RichText(
                     text: TextSpan(
-                      text: "Você não tem uma conta? ",
+                      text: "Não tem uma conta? ",
                       style: const TextStyle(color: Colors.black, fontSize: 12),
                       children: [
                         TextSpan(
                           text: "Cadastre-se",
                           style: const TextStyle(
+                            color: Colors.blue,
                             fontWeight: FontWeight.bold,
                             decoration: TextDecoration.underline,
-                            color: Colors.blue,
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => CredentialView(),
+                                  builder: (_) => const CredentialView(),
                                 ),
                               );
                             },

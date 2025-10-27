@@ -115,7 +115,7 @@ class _NotificationTestState extends State<NotificationTest> {
       android: androidDetails,
     );
 
-    final nextTime = _nextInstanceOfTime(hour: 8, minute: 0);
+    final nextTime = _nextInstanceOfTime(hour: 21, minute: 22);
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
       2,
@@ -128,7 +128,7 @@ class _NotificationTestState extends State<NotificationTest> {
     );
 
     debugPrint('Lembrete diário agendado para ${nextTime.toLocal()}.');
-    _showSnackBar('Lembrete diário agendado para 8:00 AM.');
+    _showSnackBar('Lembrete diário agendado.');
   }
 
   tz.TZDateTime _nextInstanceOfTime({required int hour, required int minute}) {

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:muto_system/views/studentViews/championshipViews/championshipView.dart';
 import 'package:muto_system/views/studentViews/friendsandschoolViews/friendsAndSchoolView.dart';
 import 'package:muto_system/views/studentViews/profileViews/profileView.dart';
 import 'package:muto_system/views/studentViews/subjectsViews/subjectView.dart';
+import 'package:muto_system/views/generalViews/loginView.dart';
 
 class HomeView extends StatefulWidget {
   final String token;
@@ -17,9 +19,7 @@ class _HomeViewState extends State<HomeView> {
   int _currentIndex = 0;
 
   void _onItemTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
+    setState(() => _currentIndex = index);
     _controller.animateToPage(
       index,
       duration: const Duration(milliseconds: 300),
@@ -27,15 +27,32 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
+  Future<void> _logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+    if (!mounted) return;
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => const CredentialViewLogin()),
+      (_) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Muto System"),
+        actions: [
+          IconButton(icon: const Icon(Icons.logout), onPressed: _logout),
+        ],
+      ),
       body: PageView(
         controller: _controller,
         onPageChanged: (index) => setState(() => _currentIndex = index),
         children: [
           SubjectProgressPage(),
-          const ColoredPage(color: Colors.green, title: 'Ranking'),
+          ColoredPage(color: Colors.green, title: 'Ranking'),
           ProfilePage(),
           ChampionshipPage(),
           FriendsAndSchoolPage(),
