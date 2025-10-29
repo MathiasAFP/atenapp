@@ -1,35 +1,33 @@
 import 'package:flutter/material.dart';
 import '../../../connections/credentialConnection.dart';
+import '../../../classes/questionClass.dart';
 
-class UserProfileScreen extends StatelessWidget {
-  const UserProfileScreen({super.key});
+class QuestionScreen extends StatelessWidget {
+  const QuestionScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Meu Perfil")),
+      appBar: AppBar(title: const Text("Responda")),
       body: Center(
-        child: FutureBuilder<String>(
-          // Chama a sua função 'teste'
-          future: teste(), 
+        child: FutureBuilder<dynamic>(
+          
+          future: QuestionClass().takeSaveQuestionDataFunction("mat", "matbas", "matbasadi", 2, "all", 3),//isso deve ser passado pelo botão por context pra variáveis que devem estar no começo do arquivo 
           
           builder: (context, snapshot) {
             
-            // 1. Carregando
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
             }
 
-            // 2. Erro
             if (snapshot.hasError) {
               return Text(
-                'Erro ao carregar e-mail: ${snapshot.error}',
+                'Erro ao carregar questão',
                 style: const TextStyle(color: Colors.red),
                 textAlign: TextAlign.center,
               );
             }
 
-            // 3. Sucesso
             if (snapshot.hasData) {
               final userEmail = snapshot.data!;
               
