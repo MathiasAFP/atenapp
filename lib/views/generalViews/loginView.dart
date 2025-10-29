@@ -104,102 +104,132 @@ class _CredentialViewLoginState extends State<CredentialViewLogin> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.asset("assets/img/logoAtena.png", width: 150),
-                  const SizedBox(height: 15),
 
-                  TextField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      labelText: "NOME",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+              child: Theme(
+                data: Theme.of(context).copyWith(
+                  brightness: Brightness.light,
+                  inputDecorationTheme: const InputDecorationTheme(
+                    labelStyle: TextStyle(color: Colors.black54),
+                    hintStyle: TextStyle(color: Colors.black38),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black54),
                     ),
                   ),
-                  const SizedBox(height: 12),
-
-                  TextField(
-                    controller: passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: "SENHA",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
+                  textSelectionTheme: const TextSelectionThemeData(
+                    cursorColor: Colors.black,
+                    selectionColor: Colors.black12,
+                    selectionHandleColor: Colors.black,
                   ),
-                  const SizedBox(height: 12),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset("assets/img/logoAtena.png", width: 150),
+                    const SizedBox(height: 15),
 
-                  DropdownButtonFormField<String>(
-                    value: selectedUserType,
-                    items: userTypes
-                        .map(
-                          (type) => DropdownMenuItem(
-                            value: type,
-                            child: Text(type.toUpperCase()),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (val) => setState(() {
-                      selectedUserType = val;
-                    }),
-                    decoration: InputDecoration(
-                      labelText: "TIPO DE USUÁRIO",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: isLoading ? null : _login,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: ThemeColors.Colors.background_black,
-                        foregroundColor: Colors.white,
-                      ),
-                      child: isLoading
-                          ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text(
-                              "Entrar",
-                              style: TextStyle(fontSize: 20),
-                            ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  RichText(
-                    text: TextSpan(
-                      text: "Não tem uma conta? ",
-                      style: const TextStyle(color: Colors.black, fontSize: 12),
-                      children: [
-                        TextSpan(
-                          text: "Cadastre-se",
-                          style: const TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const CredentialView(),
-                                ),
-                              );
-                            },
+                    TextField(
+                      controller: nameController,
+                      style: const TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                        labelText: "NOME",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 12),
+
+                    TextField(
+                      controller: passwordController,
+                      obscureText: true,
+                      style: const TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                        labelText: "SENHA",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    DropdownButtonFormField<String>(
+                      value: selectedUserType,
+                      items: userTypes
+                          .map(
+                            (type) => DropdownMenuItem(
+                              value: type,
+                              child: Text(
+                                type.toUpperCase(),
+                                style: const TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (val) => setState(() {
+                        selectedUserType = val;
+                      }),
+                      dropdownColor: Colors.white,
+                      decoration: InputDecoration(
+                        labelText: "TIPO DE USUÁRIO",
+                        labelStyle: const TextStyle(color: Colors.black54),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: isLoading ? null : _login,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: ThemeColors.Colors.background_black,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: isLoading
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : const Text(
+                                "Entrar",
+                                style: TextStyle(fontSize: 20),
+                              ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    RichText(
+                      text: TextSpan(
+                        text: "Não tem uma conta? ",
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 12,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: "Cadastre-se",
+                            style: const TextStyle(
+                              color: Colors.blue,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const CredentialView(),
+                                  ),
+                                );
+                              },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

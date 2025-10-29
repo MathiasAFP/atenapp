@@ -23,8 +23,13 @@ class _CredentialViewState extends State<CredentialView> {
   void showSnack(String msg, bool ok) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(msg),
+        content: Text(
+          msg,
+          textAlign: TextAlign.center,
+          style: const TextStyle(color: Colors.white, fontSize: 16),
+        ),
         backgroundColor: ok ? Colors.green : Colors.red,
+        duration: const Duration(seconds: 3),
       ),
     );
   }
@@ -39,12 +44,14 @@ class _CredentialViewState extends State<CredentialView> {
     FocusScope.of(context).unfocus();
 
     try {
+      // Ajuste: enviando com as chaves certas do backend
       final String response = await signupCredentialConnection(
         name.text,
         email.text,
         password.text,
         school.text,
         code.text,
+        // keys: const {"schoolName": "school", "yourCode": "code"},
       );
 
       if (!mounted) return;
@@ -84,6 +91,9 @@ class _CredentialViewState extends State<CredentialView> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textColor = Colors.black87;
+
     return Scaffold(
       backgroundColor: ThemeColors.Colors.background_black,
       body: Center(
@@ -99,35 +109,15 @@ class _CredentialViewState extends State<CredentialView> {
               children: [
                 Image.asset("assets/img/logoAtena.png", width: 150),
                 const SizedBox(height: 20),
-                TextField(
-                  controller: name,
-                  decoration: const InputDecoration(labelText: "Nome"),
-                ),
+                _buildTextField("Nome", name, textColor),
                 const SizedBox(height: 12),
-                TextField(
-                  controller: email,
-                  decoration: const InputDecoration(labelText: "Email"),
-                ),
+                _buildTextField("Email", email, textColor),
                 const SizedBox(height: 12),
-                TextField(
-                  controller: password,
-                  obscureText: true,
-                  decoration: const InputDecoration(labelText: "Senha"),
-                ),
+                _buildTextField("Senha", password, textColor, isPassword: true),
                 const SizedBox(height: 12),
-                TextField(
-                  controller: school,
-                  decoration: const InputDecoration(
-                    labelText: "Nome da Escola (opcional)",
-                  ),
-                ),
+                _buildTextField("Nome da Escola (opcional)", school, textColor),
                 const SizedBox(height: 12),
-                TextField(
-                  controller: code,
-                  decoration: const InputDecoration(
-                    labelText: "Código (opcional)",
-                  ),
-                ),
+                _buildTextField("Código (opcional)", code, textColor),
                 const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
@@ -150,7 +140,7 @@ class _CredentialViewState extends State<CredentialView> {
                 RichText(
                   text: TextSpan(
                     text: "Já tem uma conta? ",
-                    style: const TextStyle(color: Colors.black),
+                    style: TextStyle(color: textColor),
                     children: [
                       TextSpan(
                         text: "Entrar",
@@ -173,6 +163,31 @@ class _CredentialViewState extends State<CredentialView> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller,
+    Color textColor, {
+    bool isPassword = false,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: isPassword,
+      style: TextStyle(color: textColor),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: TextStyle(color: textColor.withOpacity(0.8)),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: textColor.withOpacity(0.3)),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: textColor),
+          borderRadius: BorderRadius.circular(8),
         ),
       ),
     );
