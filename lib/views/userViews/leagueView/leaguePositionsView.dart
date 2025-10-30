@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:muto_system/views/userViews/leagueView/questionView.dart';
 
-class TelaPadrao extends StatefulWidget {
+class LeagueScreen extends StatefulWidget {
   @override
-  _TelaPadraoState createState() => _TelaPadraoState();
+  _LeagueScreenState createState() => _LeagueScreenState();
 }
 
-class _TelaPadraoState extends State<TelaPadrao> {
+class _LeagueScreenState extends State<LeagueScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

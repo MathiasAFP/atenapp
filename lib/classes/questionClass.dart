@@ -13,19 +13,4 @@ class QuestionClass {
     questionsList.removeAt(0);
   }
 
-  Future<void> showDataQuestion() async {
-    return questionsList[0];
-  } 
-
 }
-
-
-
-/*
-para depois pegar os valores no front:
-final Map<String, dynamic> resposta = await showQuestionScreenFunction(
-    subject, topic, subTopic, difficulty, searchType, howMany);
-
-print(resposta['subject']);
-
-*/
