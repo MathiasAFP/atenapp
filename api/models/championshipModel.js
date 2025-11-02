@@ -1,24 +1,33 @@
 const db = require("../db");
 
-async function getQuestionByAllModel(subject, topic, subTopic, difficulty, howMany) {
-  return new Promise((resolve, reject) => {
-    const query = `
-      SELECT * 
-      FROM question 
-      WHERE subject = ? 
-        AND topic = ? 
-        AND subTopic = ? 
-        AND difficulty = ?
-      LIMIT ?
-    `;
-
-    db.query(query, [subject, topic, subTopic, difficulty, howMany], (error, result) => {
+async function championshipExists(name) {
+  new Promise((resolve, reject) => {
+    const query = "SELECT * FROM championship WHERE name = ?";
+    db.query(query, [name], (error, result) => {
       if (error) {
-        return reject(error);
+        return reject;
       }
-      return resolve(result && result.length > 0 ? result : []);
-    });
-  });
+      else{
+        return resolve(result);
+      }
+    })
+  })
 }
 
-module.exports = { getQuestionByAllModel };
+async function createChampionship(name, numberPositions, subject, topic, subTopic, code) {
+  new Promise((resolve, reject) => {
+    const query = "INSERT INTO championship (name, numberPositions, subject, topic, subTopic, code) VALUES (?,?,?,?,?,?)";
+    db.query(query, [name, numberPositions, subject, topic, subTopic, code], (error, result) => {
+      if (error) {
+        return reject;
+      }
+      else{
+        return resolve(result);
+      }
+    })
+  })
+}
+
+module.exports = { championshipExists,
+  createChampionship
+};
