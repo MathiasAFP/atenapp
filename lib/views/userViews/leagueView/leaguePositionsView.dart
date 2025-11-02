@@ -21,7 +21,7 @@ class _LeagueScreenState extends State<LeagueScreen> {
               subTopic: "matbasadi",
               difficulty: 1,
               searchType:"all",
-              howMany:1
+              howMany:3
             ),
           ),
         );
