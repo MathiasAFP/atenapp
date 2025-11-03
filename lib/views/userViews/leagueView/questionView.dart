@@ -73,7 +73,14 @@ class _QuestionScreenState extends State<QuestionScreen> {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(question["question"].toString()),
+                Text(
+                  question["question"].toString(),
+                  style: TextStyle(color: Colors.red), // <-- Cor alterada
+                ),              
+                Text("Opção A: ${question["optionA"].toString()}"),
+                Text("Opção B: ${question["optionB"].toString()}"),
+                Text("Opção C: ${question["optionC"].toString()}"),
+                Text("Opção D: ${question["optionD"].toString()}"),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {

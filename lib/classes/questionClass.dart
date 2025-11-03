@@ -37,7 +37,7 @@ class QuestionClass {
   }
 
   void verifyAccuracy(String answer){
-    if (answer == questionsList[0]["correctOption"]) {
+    if (answer == questionsList[0]["correctAnswer"]) {
       accuracy += questionsList[0]["difficulty"];
     }
   }
