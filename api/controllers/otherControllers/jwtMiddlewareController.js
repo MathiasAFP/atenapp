@@ -12,9 +12,9 @@ async function jwtMiddleware(req, res, next) {
     try {
         const tokenData = jwt.verify(token, process.env.JWT_SECRET);
         
-        const { name, userType } = tokenData;
+        const { id, userType } = tokenData;
 
-        req.userData = { name, userType }; 
+        req.userData = { id, userType }; 
 
         next();
 

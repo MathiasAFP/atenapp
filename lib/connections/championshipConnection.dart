@@ -15,6 +15,8 @@ Future<String> createChampionshipConnection(
   subject,
   topic,
   subTopic,
+  finalParameter,
+  type,
   code
 ) async {
   try {

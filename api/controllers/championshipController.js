@@ -4,7 +4,14 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 async function createChampionshipController(req, res) {
-    const {name, numberPositions, subject, topic, subTopic, code} = req.body;
+    const {name,
+  numberPositions,
+  subject,
+  topic,
+  subTopic,
+  finalParameter,
+  type, //a depender do tipo, o final parameter já se ajusta, cada tipo tem finalparameters diferentes, numero maximo de pontos...
+  code} = req.body;
     try {
         if (await championshipModel.championshipExists(name)) {
             res.status(500).json({message:"Esse campeonato já existe e está em andamento, tente outro nome"});

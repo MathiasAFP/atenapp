@@ -29,3 +29,25 @@ Future <dynamic> getQuestionConnection(subject, topic, subTopic, difficulty, sea
     return {"error":"error"};
   }
 }
+
+Future <dynamic> addPointsContextConnection(context, accuracy) async {
+  try {
+    final url = Uri.parse("$baseUrl/question/getquestion");
+
+    final res = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json', 'credentials':'include'},
+      body: jsonEncode({
+        "context": context, //pra questões da liga é league
+        "accuracy": accuracy,
+      }),
+    );
+
+    final responseBody = jsonDecode(res.body);
+
+    return responseBody;
+
+  } catch (error) {
+    return {"error":"error"};
+  }
+}

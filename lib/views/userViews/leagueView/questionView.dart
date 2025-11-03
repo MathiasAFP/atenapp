@@ -73,7 +73,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(question.toString()),
+                Text(question["question"].toString()),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
@@ -92,6 +92,24 @@ class _QuestionScreenState extends State<QuestionScreen> {
                     });
                   },
                   child: const Text("B"),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    QuestionClassInstance.verifyAccuracy("C");
+                    setState(() {
+                      QuestionClassInstance.excludeFirstQuestion();
+                    });
+                  },
+                  child: const Text("C"),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    QuestionClassInstance.verifyAccuracy("D");
+                    setState(() {
+                      QuestionClassInstance.excludeFirstQuestion();
+                    });
+                  },
+                  child: const Text("D"),
                 ),
               ],
             );

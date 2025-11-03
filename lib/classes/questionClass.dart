@@ -2,7 +2,7 @@ import 'package:muto_system/connections/questionConnection.dart';
 
 class QuestionClass {
   List<dynamic> questionsList = [];
-  int accuracy = 0;
+  List<String> accuracy = [];
 
   Future<void> takeSaveQuestionDataFunction(
       subject, topic, subTopic, difficulty, searchType, howMany) async {
@@ -27,7 +27,7 @@ class QuestionClass {
     if (questionsList.isEmpty) {
       return null;
     }
-    return questionsList[0]["subject"];
+    return questionsList[0];
   }
 
   void excludeFirstQuestion() {
@@ -38,9 +38,11 @@ class QuestionClass {
 
   void verifyAccuracy(String answer){
     if (answer == questionsList[0]["correctOption"]) {
-      accuracy += 1;
+      accuracy += questionsList[0]["difficulty"];
     }
   }
 
-  void addPointsContext(context){}
+  Future<void> addPointsContext(context) async {
+    await addPointsContextConnection(context, accuracy);
+  }
 }

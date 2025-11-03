@@ -4,8 +4,8 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 
-function createJwt(name, userType) {
-    const createdJwt = jwt.sign({ name : name , userType : userType}, process.env.JWT_SECRET, { expiresIn: "24h" });
+function createJwt(id, userType) {
+    const createdJwt = jwt.sign({ id : id , userType : userType}, process.env.JWT_SECRET, { expiresIn: "24h" });
     return createdJwt;
 }
 
@@ -22,7 +22,6 @@ async function credentialControllerSignup(req, res) {
         else if(!schoolName && yourCode){
             return res.status(500).json({ message: 'Todo código tem uma escola!' });
         }
-        // ERRO 1 e 2 CORRIGIDOS AQUI
         else if(await credentialModel.credentialModelMainTableLoginVerification('user', name) || await credentialModel.credentialModelMainTableLoginVerification('student', name) || await credentialModel.credentialModelMainTableLoginVerification('teacher', name) || await credentialModel.credentialModelMainTableLoginVerification('school', name)){
             return res.status(500).json({message:"Já existe um usuário com esse nome"});
         }
@@ -76,7 +75,7 @@ async function credentialControllerLogin(req, res) {
             }
             const passwordMatch = await bcrypt.compare(password, user.password);
             if (passwordMatch) {
-                const createdJwt = createJwt(name, userType);
+                const createdJwt = createJwt(user.id, userType);
                 return res.status(200).json({ token: createdJwt }); 
             }
             return res.status(500).json({ message: 'Credenciais inválidas' });
@@ -89,7 +88,7 @@ async function credentialControllerLogin(req, res) {
             const passwordMatch = await bcrypt.compare(password, student.password);
             if (passwordMatch) {
                 const school = await credentialModel.credentialModelRelationTableLoginVerification("schoolstudent", "student_id", student.id);
-                const createdJwt = createJwt(name);
+                const createdJwt = createJwt(student.id, userType);
                 return res.status(200).json({ token: createdJwt });
             }
             return res.status(500).json({ message: 'Credenciais inválidas' });
@@ -102,7 +101,7 @@ async function credentialControllerLogin(req, res) {
             const passwordMatch = await bcrypt.compare(password, teacher.password);
             if (passwordMatch) {
                 const school = await credentialModel.credentialModelRelationTableLoginVerification("schoolteacher", "teacher_id", teacher.id);
-                const createdJwt = createJwt(name);
+                const createdJwt = createJwt(school.id, userType);
                 return res.status(200).json({ token: createdJwt });
             }
             return res.status(500).json({ message: 'Credenciais inválidas' });
@@ -155,7 +154,7 @@ async function schoolLoginCredentialController(req, res) {
             }
             const passwordMatch = await bcrypt.compare(password, user.password);
             if (passwordMatch) {
-                const createdJwt = createJwt(name, userType);
+                const createdJwt = createJwt(school.id, userType);
                 return res.status(200).json({ token: createdJwt }); 
             }
             return res.status(500).json({ message: 'Credenciais inválidas' });
