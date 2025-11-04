@@ -26,3 +26,9 @@ async function leagueUpgrade(req, res) {
     }
     
 }
+
+async function getCompetitorsLeague(params) {
+    
+}
+
+module.exports = {leagueUpgrade, getCompetitorsLeague}

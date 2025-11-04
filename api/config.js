@@ -1,6 +1,7 @@
 const credentialRoute = require('../api/routes/credentialRoute');
 const questionRoute = require('../api/routes/questionRoute');
 const championshipRoute = require('../api/routes/championshipRoute');
+const leagueRoute = require('../api/routes/leagueRoute');
 
 const express = require('express');
 const cors = require('cors');
@@ -18,6 +19,7 @@ app.use(cookieParser());
 app.use('/championship', championshipRoute);
 app.use('/credential', credentialRoute);
 app.use('/question', questionRoute);
+app.use('/league', leagueRoute);
 
 app.listen(PORT, () => {
  console.log(`Servidor rodando em http://localhost:${PORT}`);

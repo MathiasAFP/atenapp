@@ -22,7 +22,8 @@ async function getQuestionByAllModel(subject, topic, subTopic, difficulty, howMa
 }
 
 async function addPoints(userId, leagueId, points) {
-  
+  //verificar quanto pontos tem se baseando na tabela userleague(userId, leagueId, points)
+  //outra query pra adicionar 1 ponto a essa coluna nessa relação
 }
 
 
