@@ -17,7 +17,7 @@ Future<List> getCompetitorsLeagueConnection() async {
       return ["Erro: Usuário não autenticado. Faça login primeiro."];
     }
 
-    final url = Uri.parse("$baseUrl/credential/teste");
+    final url = Uri.parse("$baseUrl/league/getcompetitorsleague");
 
     final res = await http.post(
       url,

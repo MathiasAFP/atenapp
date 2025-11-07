@@ -1,6 +1,7 @@
 // main.dart
 import 'package:flutter/material.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:muto_system/views/generalViews/signupView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:muto_system/views/userViews/leagueView/leaguePositionsView.dart';
 
@@ -62,7 +63,7 @@ class MyApp extends StatelessWidget {
         theme: theme,
         darkTheme: darkTheme,
         debugShowCheckedModeBanner: false,
-        home: LeagueScreen()
+        home: CredentialView()
       ),
     );
   }

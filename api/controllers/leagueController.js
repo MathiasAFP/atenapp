@@ -1,4 +1,6 @@
 const questionModel = require("../models/questionModel");
+const basicDataModel = require("../models/basicDataModel");
+const leagueModel = require("../models/leagueModel");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
@@ -27,8 +29,24 @@ async function leagueUpgrade(req, res) {
     
 }
 
-async function getCompetitorsLeague(params) {
-    
+// controller (leagueController.js)
+async function getCompetitorsLeague(req, res) {
+  const {userId, userType} = req.userData;
+  try {
+    const userLeague = await basicDataModel.userBasicDataLoader(userId, userType); // agora é { name, leagueId, leagueType }
+    const leagueId = userLeague.leagueId;
+
+    if (!leagueId) {
+      return res.status(200).json({ message: [] }); // sem liga → retorna lista vazia
+    }
+
+    const competitors = await leagueModel.getCompetitorsLeague(leagueId);
+    return res.status(200).json({ message: competitors });
+  } catch (error) {
+    console.error("getCompetitorsLeague error:", error);
+    return res.status(500).json({ message: "Erro ao buscar competidores" });
+  }
 }
+
 
 module.exports = {leagueUpgrade, getCompetitorsLeague}

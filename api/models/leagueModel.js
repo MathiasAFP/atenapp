@@ -1,5 +1,5 @@
 const db = require("../db");
-//ARMAZENA OS DADOS NO CONTROLLER, EXCLUI A RELAÇÃO DO USUÁRIO COM A LIGA ANTIGA E AI EXECUTA ESSA FUNÇÃO
+
 async function addUserLeague(userId, newLeagueId) {
   return new Promise((resolve, reject) => {
     const query1 = `INSERT INTO userleague (userId, leagueId, points) VALUES (?, ?, ?)`;
@@ -27,15 +27,14 @@ async function addUserLeague(userId, newLeagueId) {
 
 async function existLeagues(league) {
   return new Promise((resolve, reject) => {
-        const query = `SELECT id FROM \`${league}\` WHERE participants<50`;
-        db.query(query, (error, result) => {
-            if (error) {
-                return reject(error);
-            }
-            return resolve(result);
-        });
+    const query = `SELECT id FROM league WHERE type = ? AND participants < 50`;
+    db.query(query, [league], (error, result) => {
+      if (error) return reject(error);
+      return resolve(result && result.length > 0 ? result[0].id : null);
     });
+  });
 }
+
 
 async function createNewLeague(league) {
   return new Promise((resolve, reject) => {
@@ -49,8 +48,32 @@ async function createNewLeague(league) {
     })
 }
 
+async function getCompetitorsLeague(leagueId) {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT userId FROM userleague WHERE leagueId = ?`;
+
+    db.query(query, [leagueId], (error, result) => {
+      if (error) return reject(error);
+
+      const leagueUsers = result.map(row => row.userId);
+
+      if (leagueUsers.length === 0) return resolve([]); // Nenhum usuário na liga
+
+      const placeholders = leagueUsers.map(() => '?').join(',');
+      const query2 = `SELECT * FROM user WHERE id IN (${placeholders})`;
+
+      db.query(query2, leagueUsers, (error2, result2) => {
+        if (error2) return reject(error2);
+        resolve(result2);
+      });
+    });
+  });
+}
+
+
 module.exports = {
   addUserLeague,
   existLeagues,
   createNewLeague,
+  getCompetitorsLeague
 }

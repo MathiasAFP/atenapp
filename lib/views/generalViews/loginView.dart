@@ -3,7 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:muto_system/configs/colors.dart' as ThemeColors;
 import 'package:muto_system/views/generalViews/signupView.dart';
 import 'package:muto_system/connections/credentialConnection.dart';
-import 'package:muto_system/views/test/testeJwt.dart';
+import 'package:muto_system/views/userViews/leagueView/leaguePositionsView.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CredentialViewLogin extends StatefulWidget {
@@ -66,11 +66,11 @@ class _CredentialViewLoginState extends State<CredentialViewLogin> {
           true,
         );
 
-        final tokenToSend = savedToken ?? '';
-
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => UserProfileScreen()),
+          MaterialPageRoute(
+            builder: (_) => LeagueScreen(), // ✅ vai pra tela de competidores
+          ),
         );
       } else {
         showSnack(response.isNotEmpty ? response : 'Erro no login.', false);
@@ -104,7 +104,6 @@ class _CredentialViewLoginState extends State<CredentialViewLogin> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
               ),
-
               child: Theme(
                 data: Theme.of(context).copyWith(
                   brightness: Brightness.light,

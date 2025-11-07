@@ -27,4 +27,4 @@ async function addPoints(userId, leagueId, points) {
 }
 
 
-module.exports = { getQuestionByAllModel, verifyUserLeague };
+module.exports = { getQuestionByAllModel};
