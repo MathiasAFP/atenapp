@@ -50,31 +50,25 @@ async function createNewLeague(league) {
 
 async function getCompetitorsLeague(leagueId) {
   return new Promise((resolve, reject) => {
-    // ⚙️ Query com JOIN — elimina necessidade de duas consultas separadas
-    const query = `
-      SELECT u.id, u.name, u.email, ul.points
-      FROM userleague AS ul
-      INNER JOIN user AS u ON ul.userId = u.id
-      WHERE ul.leagueId = ?;
-    `;
+    const query = `SELECT userId FROM userleague WHERE leagueId = ?`;
 
     db.query(query, [leagueId], (error, result) => {
-      if (error) {
-        console.error("❌ Erro no getCompetitorsLeague:", error);
-        return reject(error);
-      }
+      if (error) return reject(error);
 
-      if (!result || result.length === 0) {
-        console.warn("⚠️ Nenhum competidor encontrado para essa liga:", leagueId);
-        return resolve([]); // retorna lista vazia (não quebra o app)
-      }
+      const leagueUsers = result.map(row => row.userId);
 
-      console.log("✅ Competidores encontrados:", result);
-      resolve(result); // lista de objetos {id, name, email, points}
+      if (leagueUsers.length === 0) return resolve([{name:"Seox", email:"dfs@hto"}, {name:"Seox", email:"dfs@hto"}, {name:"Seox", email:"dfs@hto"}]);
+
+      const placeholders = leagueUsers.map(() => '?').join(',');
+      const query2 = `SELECT * FROM user WHERE id IN (${placeholders})`;
+
+      db.query(query2, leagueUsers, (error2, result2) => {
+        if (error2) return reject(error2);
+        resolve(result2);
+      });
     });
   });
 }
-
 
 
 
