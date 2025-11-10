@@ -5,23 +5,41 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 
+// Em questionController.js
+
 async function getQuestionController(req, res) {
-    const {subTopic, difficulty, howMany} = req.body;
+    // Agora recebemos o NOME do subtópico e o NÚMERO da dificuldade
+    const {subTopic, difficulty, howMany} = req.body; 
+
+    // Mapa para converter o NÚMERO (do Flutter) para a STRING (do DB)
+    const difficultyMap = {
+        1: 'Fácil',
+        2: 'Médio',
+        3: 'Difícil'
+    };
+    const difficultyString = difficultyMap[difficulty]; // Converte 1 -> "Fácil"
+
+    // Validação caso a dificuldade não exista
+    if (!difficultyString) {
+        return res.status(400).json({ message: "Dificuldade inválida." });
+    }
+
     try {
-        if (searchType == "all") {
-            const questions = await questionModel.getQuestionByAllModel(subTopic, difficulty, howMany);
-            if (questions.length > 0) {
-                res.status(200).json({message:questions});
-            }
-            else{
-                res.status(500).json({message:"Nenhuma questão encontrada"});
-            }
+        // Removemos o 'if (searchType == "all")' que estava quebrado
+        // Passamos o NOME do subtópico e a STRING da dificuldade para o Model
+        const questions = await questionModel.getQuestionByAllModel(subTopic, difficultyString, howMany);
+        
+        if (questions.length > 0) {
+            res.status(200).json({message: questions});
+        } else {
+            // 404 (Not Found) é melhor que 500 (Server Error)
+            res.status(404).json({message: "Nenhuma questão encontrada"});
         }
         
     } catch (error) {
-        res.status(500).json({message:"Invalid search type"});
+        console.error("Erro no getQuestionController:", error);
+        res.status(500).json({message: "Erro interno ao buscar questões"});
     }
-    
 }
 
 async function addPointsContextConnection(req, res) {

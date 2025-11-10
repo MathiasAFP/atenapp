@@ -1,10 +1,20 @@
 const db = require("../db");
 
-async function getQuestionByAllModel(subTopic, difficulty, howMany) {
-  return new Promise((resolve, reject) => {
-    const query = `SELECT * FROM question WHERE subTopic = ? AND difficulty = ? LIMIT ?`;
+// Em questionModel.js
 
-    db.query(query, [subTopic, difficulty, howMany], (error, result) => {
+async function getQuestionByAllModel(subTopicName, difficultyString, howMany) {
+  return new Promise((resolve, reject) => {
+    // Esta query agora usa JOIN
+    const query = `
+      SELECT q.* FROM atena.question AS q
+      JOIN atena.content AS c ON q.subtopic = c.id
+      WHERE c.subtopic = ? 
+      AND q.difficulty = ?
+      LIMIT ?;
+    `;
+
+    // Os parâmetros agora são os nomes/strings corretos
+    db.query(query, [subTopicName, difficultyString, howMany], (error, result) => {
       if (error) {
         return reject(error);
       }

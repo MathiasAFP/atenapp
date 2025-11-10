@@ -78,8 +78,7 @@ class _FilterScreenState extends State<FilterScreen> {
 
   // --- Funções de verificação e navegação ---
   bool _areAllOptionsSelected() {
-    return _selectedSubject != null &&
-        _selectedTopic != null &&
+    return 
         _selectedSubtopic != null &&
         _selectedDifficultyString != null &&
         _selectedHowMany != null;
@@ -96,11 +95,8 @@ class _FilterScreenState extends State<FilterScreen> {
       MaterialPageRoute(
         // Navega para a tela que você forneceu
         builder: (context) => QuestionScreen(
-          subject: _selectedSubject!,
-          topic: _selectedTopic!,
           subTopic: _selectedSubtopic!,
-          difficulty: difficultyInt, // Envia o INT
-          searchType: "all",
+          difficulty: difficultyInt,
           howMany: 1
         ),
       ),

@@ -4,21 +4,15 @@ import '../../../classes/questionClass.dart';
 final QuestionClassInstance = QuestionClass();
 
 class QuestionScreen extends StatefulWidget {
-  final String subject;
-  final String topic;
   final String subTopic;
   final int difficulty;
-  final String searchType;
   final int howMany;
 
   const QuestionScreen({
     super.key,
-    required this.subject,
-    required this.topic,
     required this.subTopic,
     required this.difficulty,
-    required this.searchType,
-    required this.howMany,
+    required this.howMany
   });
 
   @override
@@ -69,13 +63,13 @@ class _QuestionScreenState extends State<QuestionScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  question["question"].toString(),
+                  question["statement"].toString(),
                   style: TextStyle(color: Colors.red), // <-- Cor alterada
                 ),              
-                Text("Opção A: ${question["optionA"].toString()}"),
-                Text("Opção B: ${question["optionB"].toString()}"),
-                Text("Opção C: ${question["optionC"].toString()}"),
-                Text("Opção D: ${question["optionD"].toString()}"),
+                Text("Opção A: ${question["a"].toString()}"),
+                Text("Opção B: ${question["b"].toString()}"),
+                Text("Opção C: ${question["c"].toString()}"),
+                Text("Opção D: ${question["d"].toString()}"),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
