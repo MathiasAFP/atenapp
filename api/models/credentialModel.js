@@ -155,20 +155,17 @@ async function credentialModelMainTableLoginVerification(main_table, name) {
     const query = `SELECT * FROM \`${main_table}\` WHERE name = ?`;
     db.query(query, [name], (error, results) => {
       
-      // Se houver um erro de DB, rejeite
       if (error) {
         console.error("Erro na query do Model:", error);
-        return reject(error); // Rejeita com o erro real
+        return reject(error);
       }
 
-      // Se encontrar o usuário, resolva com o usuário
       if (results && results.length > 0) {
         return resolve(results[0]);
       } 
       
-      // SE NÃO ENCONTRAR, resolva com 'null'
       else {
-        return resolve(null); // <-- ESTA É A CORREÇÃO
+        return resolve(null); 
       }
     });
   });

@@ -24,7 +24,6 @@ async function addUserLeague(userId, newLeagueId) {
   });
 }
 
-
 async function existLeagues(league) {
   return new Promise((resolve, reject) => {
     const query = `SELECT id FROM league WHERE type = ? AND participants < 50`;
@@ -35,17 +34,16 @@ async function existLeagues(league) {
   });
 }
 
-
 async function createNewLeague(league) {
   return new Promise((resolve, reject) => {
-        const query = "INSERT INTO league (type, participants) VALUES (?, ?)";
-        db.query(query, [league, 0], (error, result) => {
-            if (error) {
-                return reject(error);
-            }
-            return resolve(result);
-        });
-    })
+      const query = "INSERT INTO league (type, participants) VALUES (?, ?)";
+      db.query(query, [league, 0], (error, result) => {
+          if (error) {
+              return reject(error);
+          }
+          return resolve(result);
+      });
+  })
 }
 
 async function getCompetitorsLeague(leagueId) {
@@ -70,11 +68,29 @@ async function getCompetitorsLeague(leagueId) {
   });
 }
 
+async function verifyUserLeagueAndPoints(userId) {
+  return new Promise((resolve, reject) => {
+    const query = `SELECT leagueId, points FROM userleague WHERE userId = ?`;
+    
+    db.query(query, [userId], (error, result) => {
+      if (error) {
+        return reject(error);
+      }
+      if (result.length === 0) {
+        return reject(new Error('Usuário não encontrado em nenhuma liga.')); 
+      }
+      
+      const data = [result[0].leagueId, result[0].points];
+      resolve(data);
+    });
+  });
+}
 
 
 module.exports = {
   addUserLeague,
   existLeagues,
   createNewLeague,
-  getCompetitorsLeague
+  getCompetitorsLeague,
+  verifyUserLeagueAndPoints
 }

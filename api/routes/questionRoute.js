@@ -5,5 +5,6 @@ const jwtMiddlewareController = require('../controllers/otherControllers/jwtMidd
 
 router.post('/getquestion', jwtMiddlewareController.jwtMiddleware, questionController.getQuestionController);
 router.post('/getquestioninfo', jwtMiddlewareController.jwtMiddleware, questionController.getQuestionInfoController);
+router.post('/addpoints', jwtMiddlewareController.jwtMiddleware, questionController.addPointsContextConnection);
 
 module.exports = router;

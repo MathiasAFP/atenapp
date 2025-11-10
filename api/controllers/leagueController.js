@@ -29,7 +29,6 @@ async function leagueUpgrade(req, res) {
     
 }
 
-// controller (leagueController.js)
 async function getCompetitorsLeague(req, res) {
   const { id, userType } = req.userData;
 
