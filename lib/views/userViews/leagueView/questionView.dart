@@ -10,7 +10,6 @@ class QuestionScreen extends StatefulWidget {
   final int difficulty;
   final String searchType;
   final int howMany;
-  final String context;
 
   const QuestionScreen({
     super.key,
@@ -20,7 +19,6 @@ class QuestionScreen extends StatefulWidget {
     required this.difficulty,
     required this.searchType,
     required this.howMany,
-    required this.context
   });
 
   @override
@@ -34,12 +32,9 @@ class _QuestionScreenState extends State<QuestionScreen> {
   void initState() {
     super.initState();
     _loadQuestionsFuture = QuestionClassInstance.takeSaveQuestionDataFunction(
-      widget.subject,
-      widget.topic,
       widget.subTopic,
       widget.difficulty,
-      widget.searchType,
-      widget.howMany,
+      widget.howMany
     );
   }
 

@@ -5,12 +5,11 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 
-//fazer filtro pra se o subtopico n for compatível com o tópico dar erro!
 async function getQuestionController(req, res) {
-    const {subject, topic, subTopic, difficulty, searchType, howMany} = req.body;
+    const {subTopic, difficulty, howMany} = req.body;
     try {
         if (searchType == "all") {
-            const questions = await questionModel.getQuestionByAllModel(subject, topic, subTopic, difficulty, howMany);
+            const questions = await questionModel.getQuestionByAllModel(subTopic, difficulty, howMany);
             if (questions.length > 0) {
                 res.status(200).json({message:questions});
             }
@@ -43,5 +42,36 @@ async function addPointsContextConnection(req, res) {
     }
 }
 
+async function getQuestionInfoController(req, res) {
+  
+  try { 
+    const repeatedQuestionsObject = await questionModel.getQuestionInfoModel(); 
+    
+    const questions = {};
 
-module.exports = {getQuestionController};
+    for (const row of repeatedQuestionsObject) {
+      
+      const subject = row.subject;  
+      const topic = row.topic;     
+      const subtopic = row.subtopic; 
+
+      if (!questions[subject]) {
+        questions[subject] = {}; 
+      }
+      
+      if (!questions[subject][topic]) {
+        questions[subject][topic] = [];
+      }
+      
+      questions[subject][topic].push(subtopic);
+    }
+    
+    res.status(200).json({message: questions});
+
+  } catch (error) {
+    console.error("Erro no getQuestionInfoController:", error);
+    res.status(500).json({ message: "Erro interno no servidor." });
+  }
+}
+
+module.exports = {getQuestionController, getQuestionInfoController, addPointsContextConnection};

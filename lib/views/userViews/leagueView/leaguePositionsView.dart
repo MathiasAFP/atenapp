@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:muto_system/classes/leagueClass.dart';
+import 'package:muto_system/views/userViews/leagueView/filterQuestionsView.dart';
+import 'package:muto_system/views/userViews/leagueView/questionView.dart';
 import 'package:muto_system/views/widgets/competitorWidget.dart';
 
 final LeagueClassInstance = LeagueClass();
@@ -73,6 +75,9 @@ class _LeagueScreenState extends State<LeagueScreen> {
           }
         },
       ),
+      floatingActionButton: FloatingActionButton(onPressed: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) => FilterScreen()));
+      }),
     );
   }
 }

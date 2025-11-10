@@ -1,18 +1,10 @@
 const db = require("../db");
 
-async function getQuestionByAllModel(subject, topic, subTopic, difficulty, howMany) {
+async function getQuestionByAllModel(subTopic, difficulty, howMany) {
   return new Promise((resolve, reject) => {
-    const query = `
-      SELECT * 
-      FROM question 
-      WHERE subject = ? 
-        AND topic = ? 
-        AND subTopic = ? 
-        AND difficulty = ?
-      LIMIT ?
-    `;
+    const query = `SELECT * FROM question WHERE subTopic = ? AND difficulty = ? LIMIT ?`;
 
-    db.query(query, [subject, topic, subTopic, difficulty, howMany], (error, result) => {
+    db.query(query, [subTopic, difficulty, howMany], (error, result) => {
       if (error) {
         return reject(error);
       }
@@ -26,5 +18,16 @@ async function addPoints(userId, leagueId, points) {
   //outra query pra adicionar 1 ponto a essa coluna nessa relação
 }
 
+async function getQuestionInfoModel() {
+  return new Promise((resolve, reject) => {
+    const query = "SELECT * FROM content";
+    db.query(query, (error, result) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(result);
+    })
+  })
+}
 
-module.exports = { getQuestionByAllModel};
+module.exports = { getQuestionByAllModel, getQuestionInfoModel};

@@ -3,12 +3,12 @@ import 'package:muto_system/connections/questionConnection.dart';
 class QuestionClass {
   List<dynamic> questionsList = [];
   List<String> accuracy = [];
+  Map<String, dynamic> questionInfo = {};
 
-  Future<void> takeSaveQuestionDataFunction(
-      subject, topic, subTopic, difficulty, searchType, howMany) async {
+  Future<void> takeSaveQuestionDataFunction(subTopic, difficulty, howMany) async {
     
     final dynamic questionsData = await getQuestionConnection(
-        subject, topic, subTopic, difficulty, searchType, howMany);
+        subTopic, difficulty, howMany);
 
     if (questionsData is Map<String, dynamic> && 
         questionsData.containsKey("message") &&
@@ -45,4 +45,13 @@ class QuestionClass {
   Future<void> addPointsContext(context) async {
     await addPointsContextConnection(context, accuracy);
   }
+
+  Future<void> getQuestionInfo() async {
+    questionInfo = await getQuestionInfoConnection();
+  }
+
+  Future<Map<String, dynamic>> showQuestionInfo() async {
+    return questionInfo;
+  }
+  
 }
