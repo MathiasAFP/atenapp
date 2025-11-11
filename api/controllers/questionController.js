@@ -53,7 +53,7 @@ async function addPointsContextConnection(req, res) {
 
       console.log("🟢 Usuário:", id);
       console.log("🟢 Liga:", currentLeagueId);
-      console.log("🟢 Pontos atuais:", currentPoints);
+      console.log("🟢 Pontos atuaiss:", currentPoints);
       console.log("🟢 Pontos ganhos:", points);
       console.log("🟢 Novo total:", newPoints);
 
