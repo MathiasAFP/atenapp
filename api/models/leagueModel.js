@@ -36,14 +36,12 @@ async function existLeagues(league) {
 
 async function createNewLeague(league) {
   return new Promise((resolve, reject) => {
-      const query = "INSERT INTO league (type, participants) VALUES (?, ?)";
-      db.query(query, [league, 0], (error, result) => {
-          if (error) {
-              return reject(error);
-          }
-          return resolve(result);
-      });
-  })
+    const query = "INSERT INTO league (type, participants) VALUES (?, ?)";
+    db.query(query, [league, 0], (error, result) => {
+      if (error) return reject(error);
+      return resolve(result);
+    });
+  });
 }
 
 async function getCompetitorsLeague(leagueId) {
@@ -55,7 +53,8 @@ async function getCompetitorsLeague(leagueId) {
 
       const leagueUsers = result.map(row => row.userId);
 
-      if (leagueUsers.length === 0) return resolve([{name:"Seox", email:"dfs@hto"}, {name:"Seox", email:"dfs@hto"}, {name:"Seox", email:"dfs@hto"}]);
+      if (leagueUsers.length === 0)
+        return resolve([{ name: "Seox", email: "dfs@hto" }, { name: "Seox", email: "dfs@hto" }]);
 
       const placeholders = leagueUsers.map(() => '?').join(',');
       const query2 = `SELECT * FROM user WHERE id IN (${placeholders})`;
@@ -77,15 +76,15 @@ async function verifyUserLeagueAndPoints(userId) {
         return reject(error);
       }
       if (result.length === 0) {
-        return reject(new Error('Usuário não encontrado em nenhuma liga.')); 
+        return reject(new Error('Usuário não encontrado em nenhuma liga.'));
       }
-      
-      const data = [result[0].leagueId, result[0].points];
+
+      // Garante que vem como número
+      const data = [Number(result[0].leagueId), Number(result[0].points)];
       resolve(data);
     });
   });
 }
-
 
 module.exports = {
   addUserLeague,
@@ -93,4 +92,4 @@ module.exports = {
   createNewLeague,
   getCompetitorsLeague,
   verifyUserLeagueAndPoints
-}
+};
