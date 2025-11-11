@@ -23,7 +23,7 @@ class _CredentialViewLoginState extends State<CredentialViewLogin> {
 
   void showSnack(String message, bool success) {
     final snackBar = SnackBar(
-      content: Text(message),
+      content: Text(message, textAlign: TextAlign.center),
       backgroundColor: success ? Colors.green : Colors.red,
       duration: const Duration(seconds: 3),
     );
@@ -68,9 +68,7 @@ class _CredentialViewLoginState extends State<CredentialViewLogin> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (_) => LeagueScreen(), // ✅ vai pra tela de competidores
-          ),
+          MaterialPageRoute(builder: (_) => LeagueScreen()),
         );
       } else {
         showSnack(response.isNotEmpty ? response : 'Erro no login.', false);
@@ -91,66 +89,52 @@ class _CredentialViewLoginState extends State<CredentialViewLogin> {
 
   @override
   Widget build(BuildContext context) {
+    final textColor = Colors.white;
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        backgroundColor: ThemeColors.Colors.background_black,
-        body: Center(
-          child: SingleChildScrollView(
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20),
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Theme(
-                data: Theme.of(context).copyWith(
-                  brightness: Brightness.light,
-                  inputDecorationTheme: const InputDecorationTheme(
-                    labelStyle: TextStyle(color: Colors.black54),
-                    hintStyle: TextStyle(color: Colors.black38),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black54),
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Color(0xFF0E1126), Color(0xFF1A2040)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(24),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 25,
+                  vertical: 35,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(24),
+                  border: Border.all(color: Colors.white.withOpacity(0.1)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.4),
+                      blurRadius: 20,
+                      offset: const Offset(0, 8),
                     ),
-                  ),
-                  textSelectionTheme: const TextSelectionThemeData(
-                    cursorColor: Colors.black,
-                    selectionColor: Colors.black12,
-                    selectionHandleColor: Colors.black,
-                  ),
+                  ],
                 ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Image.asset("assets/img/logoAtena.png", width: 150),
+                    Image.asset("assets/img/logoAtena.png", width: 120),
+                    const SizedBox(height: 25),
+                    _buildTextField("Nome", nameController),
                     const SizedBox(height: 15),
-
-                    TextField(
-                      controller: nameController,
-                      style: const TextStyle(color: Colors.black),
-                      decoration: InputDecoration(
-                        labelText: "NOME",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
+                    _buildTextField(
+                      "Senha",
+                      passwordController,
+                      isPassword: true,
                     ),
-                    const SizedBox(height: 12),
-
-                    TextField(
-                      controller: passwordController,
-                      obscureText: true,
-                      style: const TextStyle(color: Colors.black),
-                      decoration: InputDecoration(
-                        labelText: "SENHA",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-
+                    const SizedBox(height: 15),
                     DropdownButtonFormField<String>(
                       value: selectedUserType,
                       items: userTypes
@@ -159,58 +143,76 @@ class _CredentialViewLoginState extends State<CredentialViewLogin> {
                               value: type,
                               child: Text(
                                 type.toUpperCase(),
-                                style: const TextStyle(color: Colors.black),
+                                style: const TextStyle(color: Colors.white),
                               ),
                             ),
                           )
                           .toList(),
+                      dropdownColor: const Color(0xFF1C223E),
                       onChanged: (val) => setState(() {
                         selectedUserType = val;
                       }),
-                      dropdownColor: Colors.white,
                       decoration: InputDecoration(
-                        labelText: "TIPO DE USUÁRIO",
-                        labelStyle: const TextStyle(color: Colors.black54),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                        labelText: "Tipo de usuário",
+                        labelStyle: const TextStyle(color: Colors.white70),
+                        filled: true,
+                        fillColor: Colors.white.withOpacity(0.08),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 16,
+                          horizontal: 14,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: Colors.white.withOpacity(0.2),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: const BorderSide(
+                            color: Colors.lightBlueAccent,
+                            width: 1.5,
+                          ),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
-
+                    const SizedBox(height: 25),
                     SizedBox(
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
                         onPressed: isLoading ? null : _login,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: ThemeColors.Colors.background_black,
-                          foregroundColor: Colors.white,
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          elevation: 6,
                         ),
                         child: isLoading
                             ? const CircularProgressIndicator(
-                                color: Colors.white,
+                                color: Colors.black,
                               )
                             : const Text(
                                 "Entrar",
-                                style: TextStyle(fontSize: 20),
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                       ),
                     ),
                     const SizedBox(height: 20),
-
                     RichText(
                       text: TextSpan(
                         text: "Não tem uma conta? ",
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 12,
-                        ),
+                        style: const TextStyle(color: Colors.white70),
                         children: [
                           TextSpan(
                             text: "Cadastre-se",
                             style: const TextStyle(
-                              color: Colors.blue,
+                              color: Colors.lightBlueAccent,
                               fontWeight: FontWeight.bold,
                               decoration: TextDecoration.underline,
                             ),
@@ -231,6 +233,40 @@ class _CredentialViewLoginState extends State<CredentialViewLogin> {
                 ),
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(
+    String label,
+    TextEditingController controller, {
+    bool isPassword = false,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: isPassword,
+      style: const TextStyle(color: Colors.white, fontSize: 16),
+      cursorColor: Colors.lightBlueAccent,
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Colors.white70),
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.08),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 16,
+          horizontal: 14,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.white.withOpacity(0.2)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(
+            color: Colors.lightBlueAccent,
+            width: 1.5,
           ),
         ),
       ),

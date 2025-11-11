@@ -44,14 +44,12 @@ class _CredentialViewState extends State<CredentialView> {
     FocusScope.of(context).unfocus();
 
     try {
-      // Ajuste: enviando com as chaves certas do backend
       final String response = await signupCredentialConnection(
         name.text,
         email.text,
         password.text,
         school.text,
         code.text,
-        // keys: const {"schoolName": "school", "yourCode": "code"},
       );
 
       if (!mounted) return;
@@ -91,76 +89,98 @@ class _CredentialViewState extends State<CredentialView> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final textColor = Colors.black87;
+    final textColor = Colors.white;
 
     return Scaffold(
-      backgroundColor: ThemeColors.Colors.background_black,
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Column(
-              children: [
-                Image.asset("assets/img/logoAtena.png", width: 150),
-                const SizedBox(height: 20),
-                _buildTextField("Nome", name, textColor),
-                const SizedBox(height: 12),
-                _buildTextField("Email", email, textColor),
-                const SizedBox(height: 12),
-                _buildTextField("Senha", password, textColor, isPassword: true),
-                const SizedBox(height: 12),
-                _buildTextField("Nome da Escola (opcional)", school, textColor),
-                const SizedBox(height: 12),
-                _buildTextField("Código (opcional)", code, textColor),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: isLoading ? null : _signup,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: ThemeColors.Colors.background_black,
-                      foregroundColor: Colors.white,
-                    ),
-                    child: isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text(
-                            "Cadastrar",
-                            style: TextStyle(fontSize: 20),
-                          ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF0E1126), Color(0xFF1A2040)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 35),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.08),
+                borderRadius: BorderRadius.circular(24),
+                border: Border.all(color: Colors.white.withOpacity(0.1)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.4),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
                   ),
-                ),
-                const SizedBox(height: 15),
-                RichText(
-                  text: TextSpan(
-                    text: "Já tem uma conta? ",
-                    style: TextStyle(color: textColor),
-                    children: [
-                      TextSpan(
-                        text: "Entrar",
-                        style: const TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
+                ],
+              ),
+              child: Column(
+                children: [
+                  Image.asset("assets/img/logoAtena.png", width: 120),
+                  const SizedBox(height: 25),
+                  _buildTextField("Nome", name),
+                  const SizedBox(height: 15),
+                  _buildTextField("Email", email),
+                  const SizedBox(height: 15),
+                  _buildTextField("Senha", password, isPassword: true),
+                  const SizedBox(height: 15),
+                  _buildTextField("Nome da Escola (opcional)", school),
+                  const SizedBox(height: 15),
+                  _buildTextField("Código (opcional)", code),
+                  const SizedBox(height: 25),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: isLoading ? null : _signup,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () => Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const CredentialViewLogin(),
-                            ),
-                          ),
+                        elevation: 6,
                       ),
-                    ],
+                      child: isLoading
+                          ? const CircularProgressIndicator(color: Colors.black)
+                          : const Text(
+                              "Cadastrar",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 20),
+                  RichText(
+                    text: TextSpan(
+                      text: "Já tem uma conta? ",
+                      style: const TextStyle(color: Colors.white70),
+                      children: [
+                        TextSpan(
+                          text: "Entrar",
+                          style: const TextStyle(
+                            color: Colors.lightBlueAccent,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const CredentialViewLogin(),
+                              ),
+                            ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -170,24 +190,33 @@ class _CredentialViewState extends State<CredentialView> {
 
   Widget _buildTextField(
     String label,
-    TextEditingController controller,
-    Color textColor, {
+    TextEditingController controller, {
     bool isPassword = false,
   }) {
     return TextField(
       controller: controller,
       obscureText: isPassword,
-      style: TextStyle(color: textColor),
+      style: const TextStyle(color: Colors.white, fontSize: 16),
+      cursorColor: Colors.lightBlueAccent,
       decoration: InputDecoration(
         labelText: label,
-        labelStyle: TextStyle(color: textColor.withOpacity(0.8)),
+        labelStyle: const TextStyle(color: Colors.white70),
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.08),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 16,
+          horizontal: 14,
+        ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: textColor.withOpacity(0.3)),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.white.withOpacity(0.2)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: textColor),
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(
+            color: Colors.lightBlueAccent,
+            width: 1.5,
+          ),
         ),
       ),
     );
