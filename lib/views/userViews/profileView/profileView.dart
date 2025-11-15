@@ -1,4 +1,4 @@
-import 'package:Atena/views/userViews/configView/colorConfigView.dart';
+import 'package:Atena/views/userViews/configView/configView.dart';
 import 'package:flutter/material.dart';
 
 class UserProfileView extends StatefulWidget {
@@ -7,20 +7,19 @@ class UserProfileView extends StatefulWidget {
 }
 
 class _UserProfileViewState extends State<UserProfileView> {
-  // Método auxiliar para construir as colunas de estatísticas
   Widget _buildStatColumn(String label, String value) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           value,
-          style: const TextStyle(
-              fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(
+              fontSize: globalFontSize, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         const SizedBox(height: 4),
         Text(
           label,
-          style: const TextStyle(fontSize: 14, color: Colors.white70),
+          style: TextStyle(fontSize: 14, color: primaryColor),
         ),
       ],
     );
@@ -29,23 +28,21 @@ class _UserProfileViewState extends State<UserProfileView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: quinternaryColor,
       body: Center(
         child: Column(
           children: [
             Container(
-              width: double.infinity, // Ocupa toda a largura
-              // Altura definida para englobar a imagem de fundo e o card de stats
+              width: double.infinity,
               height: 380,
               child: Stack(
                 alignment: Alignment.topCenter,
                 children: [
-                  // 1. IMAGEM DE FUNDO
                   Container(
-                    height: 250, // Altura da imagem de fundo visível
+                    height: 250,
                     width: double.infinity,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
-                        // Substitua pelo seu asset de fundo
                         image: NetworkImage(
                             'https://tecnico-informatica.concordia.ifc.edu.br/wp-content/uploads/sites/20/2017/12/IMG-20171128-WA0003.jpg'),
                         fit: BoxFit.cover,
@@ -57,31 +54,43 @@ class _UserProfileViewState extends State<UserProfileView> {
                     ),
                   ),
 
-                  // 2. CONTEÚDO CENTRALIZADO (Foto, Nome, Fogueira, etc.)
                   Positioned(
-                    top: 40, // Espaço do topo (ajustado para a barra de status)
+                    top: 40,
                     child: Column(
                       children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => ConfigView()),
+                            ).then((value) {
+                              setState(() {}); // ← atualiza tema ao voltar
+                            });
+                          },
+                          child: const Icon(Icons.color_lens),
+                        ),
                         const CircleAvatar(
                           radius: 50,
-                          // Usando sua imagem de assets como placeholder para o perfil
-                          backgroundImage:
-                              NetworkImage("https://avatars.githubusercontent.com/u/129172387?v=4"),
+                          backgroundImage: NetworkImage(
+                              "https://avatars.githubusercontent.com/u/129172387?v=4"),
                         ),
                         const SizedBox(height: 12),
-                        const Text('Maurício Reis Doefer',
-                            style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white)),
+                        const Text(
+                          'Maurício Reis Doefer',
+                          style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
                         const SizedBox(height: 4),
-                        const Text('Estudante do IFC',
-                            style:
-                                TextStyle(fontSize: 16, color: Colors.white70)),
+                        Text(
+                          'Estudante do IFC',
+                          style: TextStyle(fontSize: 16, color: primaryColor),
+                        ),
                         const SizedBox(height: 12),
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
                             color: Colors.black.withOpacity(0.3),
                             borderRadius: BorderRadius.circular(20),
@@ -102,13 +111,12 @@ class _UserProfileViewState extends State<UserProfileView> {
                     ),
                   ),
 
-                  // 3. CARD DE ESTATÍSTICAS (Posicionado na parte inferior)
                   Positioned(
                     bottom: 0,
                     left: 16,
                     right: 16,
                     child: Card(
-                      color: Colors.black.withOpacity(0.5), // Cor escura semi-transparente
+                      color: secondaryColor,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12)),
                       child: Padding(

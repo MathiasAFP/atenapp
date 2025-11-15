@@ -2,7 +2,7 @@ import 'package:Atena/views/generalViews/schoolSignupView.dart';
 import 'package:Atena/views/generalViews/userLoginView.dart';
 import 'package:flutter/material.dart';
 import 'package:Atena/connections/credentialConnection.dart';
-import 'package:Atena/views/userViews/configView/colorConfigView.dart';
+import 'package:Atena/views/userViews/configView/configView.dart';
 
 class UserSignupView extends StatefulWidget {
   @override

@@ -1,14 +1,18 @@
 import 'package:Atena/connections/credentialConnection.dart';
 import 'package:flutter/material.dart';
-import 'package:Atena/views/userViews/configView/colorConfigView.dart';
+import 'package:Atena/views/userViews/configView/configView.dart';
 import 'package:Atena/views/pageViews.dart';
 import 'package:Atena/views/generalViews/userSignupView.dart';
 import 'package:Atena/connections/basicData.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  final colorConfig = ColorConfig();
+  await colorConfig.getColorConfig(); 
+
   runApp(const MyApp());
 }
 
@@ -20,7 +24,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
-      home: AuthCheckScreen(),
+      home: const AuthCheckScreen(),
       routes: {
         '/login': (context) => UserSignupView(),
       },
@@ -47,7 +51,7 @@ class _AuthCheckScreenState extends State<AuthCheckScreen> {
   Future<String> _loadUserType() async {
     try {
       final colorConfig = ColorConfig();
-      await colorConfig.getColorConfig();
+      await colorConfig.getColorConfig(); // ← garante cores corretas
 
       final userBasicData = await getUserBasicDataConnection();
 
@@ -62,7 +66,7 @@ class _AuthCheckScreenState extends State<AuthCheckScreen> {
       return "";
 
     } catch (e) {
-      debugPrint("Erro ao carregar usuário (provável token expirado): $e");
+      debugPrint("Erro ao carregar usuário: $e");
       await deleteToken(); 
       return "";
     }
@@ -75,17 +79,19 @@ class _AuthCheckScreenState extends State<AuthCheckScreen> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
-            body: Center(child: Image.asset(
-                  'assets/logoWithoutBackground.png',
-                  width: 200, 
-                  height: 200,
-                )),
+            body: Center(
+              child: Image.asset(
+                'assets/logoWithoutBackground.png',
+                width: 200,
+                height: 200,
+              ),
+            ),
           );
         }
 
         if (snapshot.hasError) {
           debugPrint("Erro no FutureBuilder: ${snapshot.error}");
-          return UserSignupView(); 
+          return UserSignupView();
         }
 
         if (snapshot.hasData) {
