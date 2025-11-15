@@ -4,7 +4,7 @@ async function jwtMiddleware(req, res, next) {
     const authHeader = req.headers.authorization; 
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ message: 'Token de autenticação não fornecido ou inválido.' });
+        return res.status(401).json({ message: 'Token inválido, expirado ou não fornecido' });
     }
 
     const token = authHeader.split(' ')[1]; 
@@ -19,7 +19,7 @@ async function jwtMiddleware(req, res, next) {
         next();
 
     } catch (err) {
-        return res.status(403).json({ message: 'Token inválido ou expirado.' });
+        return res.status(403).json({ message: 'Token inválido, expirado ou não fornecido' });
     }
 }
 
