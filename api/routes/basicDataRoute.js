@@ -6,5 +6,6 @@ const jwtMiddlewareController = require('../controllers/otherControllers/jwtMidd
 // routes mounted at /basicdata
 
 router.post('/userbasicdata', jwtMiddlewareController.jwtMiddleware, basicDataController.userBasicDataLoader);
+router.post('/generalbasicdata', jwtMiddlewareController.jwtMiddleware, basicDataController.generalBasicData);
 
 module.exports = router;

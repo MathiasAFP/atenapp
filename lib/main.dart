@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'views/generalViews/userSignupView.dart';
 import 'views/pageViews.dart';
-import 'connections/basicData.dart';
+import 'connections/basicDataConnection.dart';
 import 'connections/credentialConnection.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

@@ -4,7 +4,6 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 async function userBasicDataLoader(req, res) {
-    const { context } = req.body;
     const { id, userType } = req.userData;
 
     try {
@@ -16,5 +15,29 @@ async function userBasicDataLoader(req, res) {
     }
 }
 
+async function generalBasicData(req, res) {
+    const { id, userType } = req.userData;
+    try {
+        if (userType == "user") {
+            const generalBasicDataAnswer = await basicDataModel.userGeneralBasicDataModel(id);
+            return res.status(200).json({message:generalBasicDataAnswer});
+        }
+        else if (userType == "student") {
+            const generalBasicDataAnswer = await basicDataModel.studentGeneralBasicDataModel(id);
+            return res.status(200).json({message:generalBasicDataAnswer});
+        }
+        else if (userType == "teacher") {
+            const generalBasicDataAnswer = await basicDataModel.teacherGeneralBasicDataModel(id);
+            return res.status(200).json({message:generalBasicDataAnswer});
+        }
+        else {
+            const generalBasicDataAnswer = await basicDataModel.schoolGeneralBasicDataModel(id);
+            return res.status(200).json({message:generalBasicDataAnswer});
+        }
 
-module.exports = {userBasicDataLoader};
+    } catch (error) {
+        res.status(500).json({message:"Erro ao buscar dados do usuário"})
+    }
+}
+
+module.exports = {userBasicDataLoader, generalBasicData};

@@ -13,21 +13,18 @@ class ThemeNotifier extends ChangeNotifier {
   ThemeData get themeData => _themeData;
   double get fontSize => _fontSize;
 
-  // ----------- CARREGAR CONFIGURAÇÕES -----------
   Future<void> loadPreferences() async {
     final prefs = await SharedPreferences.getInstance();
 
     final savedTheme = prefs.getString("themeMode");
     final savedFontSize = prefs.getString("fontSizeConfig");
 
-    // Tema
     if (savedTheme == "dark") {
       _themeData = AppColors.darkTheme;
     } else {
       _themeData = AppColors.lightTheme;
     }
 
-    // Fonte
     if (savedFontSize == "small") {
       _fontSize = 14;
     } else if (savedFontSize == "large") {
@@ -39,7 +36,6 @@ class ThemeNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  // ----------- TROCAR TEMA -----------
   Future<void> setTheme(String mode) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("themeMode", mode);
@@ -53,7 +49,6 @@ class ThemeNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  // ----------- TROCAR TAMANHO DA FONTE -----------
   Future<void> setFontSize(String size) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("fontSizeConfig", size);

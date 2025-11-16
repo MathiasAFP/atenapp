@@ -27,4 +27,60 @@ async function userBasicDataLoader(id, userType) {
   });
 }
 
-module.exports = { userBasicDataLoader };
+async function userGeneralBasicDataModel(id) {
+  return new Promise((resolve, reject) => {
+
+    // 1) Nome
+    const q1 = "SELECT name FROM user WHERE id = ?";
+    db.query(q1, [id], (e1, r1) => {
+      if (e1) return reject(e1);
+
+      const name = r1.length > 0 ? r1[0].name : null;
+
+      // 2) Pega leagueId
+      const q2 = "SELECT leagueId FROM userleague WHERE userId = ?";
+      db.query(q2, [id], (e2, r2) => {
+        if (e2) return reject(e2);
+
+        const leagueId = r2.length > 0 ? r2[0].leagueId : null;
+
+        if (!leagueId) {
+          return resolve({ name, leagueType: null });
+        }
+
+        // 3) Pega leagueType
+        const q3 = "SELECT type FROM league WHERE id = ?";
+        db.query(q3, [leagueId], (e3, r3) => {
+          if (e3) return reject(e3);
+
+          const leagueType = r3.length > 0 ? r3[0].type : null;
+
+          resolve({
+            "name":name,
+            "leagueType":leagueType
+          });
+        });
+      });
+    });
+  });
+}
+
+async function studentGeneralBasicDataModel(id) {
+  new Promise((resolve, reject) => {
+    
+  })
+}
+
+async function teacherGeneralBasicDataModel(id) {
+  new Promise((resolve, reject) => {
+    
+  })
+}
+
+async function schoolGeneralBasicDataModel(id) {
+  new Promise((resolve, reject) => {
+    
+  })
+}
+
+module.exports = { userBasicDataLoader, userGeneralBasicDataModel, studentGeneralBasicDataModel, teacherGeneralBasicDataModel, schoolGeneralBasicDataModel};

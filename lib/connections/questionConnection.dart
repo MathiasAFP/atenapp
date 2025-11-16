@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:Atena/main.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:Atena/connections/credentialConnection.dart';
 
@@ -23,7 +25,19 @@ Future <dynamic> getQuestionConnection(subTopic, difficulty, howMany) async {
 
     final responseBody = jsonDecode(res.body);
 
+    if (res.statusCode == 401 || res.statusCode == 403) {
+      
+      await deleteToken(); 
+
+      navigatorKey.currentState?.pushNamedAndRemoveUntil(
+        '/login', (Route<dynamic> route) => false);
+      
+      return []; 
+    }
+
     return responseBody;
+
+    
 
   } catch (error) {
     return {"error":"error"};
@@ -48,6 +62,16 @@ Future <dynamic> addPointsContextConnection(context, accuracy) async {
     );
 
     final responseBody = jsonDecode(res.body);
+
+    if (res.statusCode == 401 || res.statusCode == 403) {
+      
+      await deleteToken(); 
+
+      navigatorKey.currentState?.pushNamedAndRemoveUntil(
+        '/login', (Route<dynamic> route) => false);
+      
+      return []; 
+    }
 
     return responseBody;
 
@@ -75,7 +99,17 @@ Future <dynamic> getQuestionInfoConnection() async {
 
     if (res.statusCode == 200) {
       return responseBody['message'] ?? 'Requisição realizada com sucesso.';
-    } else {
+    } 
+    else if (res.statusCode == 401 || res.statusCode == 403) {
+      
+      await deleteToken(); 
+
+      navigatorKey.currentState?.pushNamedAndRemoveUntil(
+        '/login', (Route<dynamic> route) => false);
+      
+      return []; 
+    }
+    else {
       return responseBody['message'] ?? 'Erro na requisição.';
     }
 

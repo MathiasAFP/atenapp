@@ -7,7 +7,6 @@ class AppColors {
   static const Color quaternary = Color(0xFF90CAF9);
   static const Color quinternary = Color(0xFFE3F2FD);
 
-  // Tema claro
   static final lightTheme = ThemeData(
     brightness: Brightness.light,
     colorScheme: const ColorScheme(
@@ -25,7 +24,6 @@ class AppColors {
     scaffoldBackgroundColor: quinternary,
   );
 
-  // Tema escuro
   static final darkTheme = ThemeData(
     brightness: Brightness.dark,
     colorScheme: const ColorScheme(
