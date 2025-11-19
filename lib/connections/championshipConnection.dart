@@ -46,6 +46,16 @@ Future<dynamic> creatEvent(championshipid, name, finishdate, type) async {
   );
 }
 
+Future<dynamic> excludeChampionship(championshipName) async {
+  return await defaultConnection(
+    "/championship/excludechampionship",
+    "POST",
+    body: {
+      "championshipName": championshipName
+    },
+  );
+}
+
 Future<dynamic> getChampionships() async {
   return await defaultConnection(
     "/championship/getchampionships",
