@@ -79,6 +79,16 @@ async function createChampionshipEventBlockController(req, res) {
 
 async function getYourChampionshipsController(req, res) {
     const { id, userType } = req.userData;
+    try {
+        const yourChampionships = await championshipModel.getYourChampionshipsModel;
+        if (yourChampionships) {
+            res.status(200).json({message:yourChampionships});
+        } else {
+            res.status(500).json({message:"Erro ao buscar campeonatos"});
+        }
+    } catch (error) {
+        return res.status(500).json({message:"Erro crítico"});
+    }
 
 }
 

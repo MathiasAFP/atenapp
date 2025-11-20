@@ -132,7 +132,14 @@ async function createChampionshipEventModel(params) {
 
 async function getYourChampionshipsModel(id) {
   new Promise((resolve, reject) => {
-    
+    const query = "SELECT * FROM championships WHERE id = ?";
+    db.query(query, [id], (error, result) => {
+      if (error) {
+        return reject(error);
+      } else {
+        return resolve(result);
+      }
+    })
   })
 }
 

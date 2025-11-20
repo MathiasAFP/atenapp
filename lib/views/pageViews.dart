@@ -1,6 +1,5 @@
 import 'package:Atena/views/schoolViews/profileView/schoolProfileView.dart';
 import 'package:Atena/views/studentViews/profileView/studentProfileView.dart';
-import 'package:Atena/views/teacherViews/createChampionshipView.dart';
 import 'package:Atena/views/teacherViews/profileView/teacherProfileView.dart';
 import 'package:Atena/views/userViews/profileView/profileView.dart';
 import 'package:flutter/material.dart';
@@ -43,8 +42,7 @@ class TeacherPageView extends StatelessWidget {
       controller: PageController(initialPage: 0),
       scrollDirection: Axis.horizontal,
       children: [
-        TeacherProfileView(),
-        CreateChampionshipView()
+        TeacherProfileView()
       ],
     );
 }
