@@ -31,10 +31,8 @@ Future<dynamic> loginCredentialConnection(name, password, userType) async {
     },
   );
 
-  // Verifica se a resposta é um Map e tem o token (graças ao ajuste no config)
   if (response is Map && response['token'] != null) {
     await saveTokenCredentialConnection(response['token']);
-    // Retorna a mensagem se houver, senão retorna o próprio objeto
     return response['message'] ?? response; 
   }
 
