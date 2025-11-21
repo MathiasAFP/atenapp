@@ -5,7 +5,8 @@ async function createClass(req, res) {
     const {userId, userType} = req.userData;
     const {name, teacherCode, studentCode} = req.body;
     try {
-       if (await classModel.createClass(name,teacherCode,studentCode,userId)) {
+      const classCreated = await classModel.createClass(name,teacherCode,studentCode,userId);
+       if (classCreated) {
         return res.status(200).json({message:"Turma criada com sucesso"});
        } else {
         return res.status(500).json({message:"Erro ao criar turma"});

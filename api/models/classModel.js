@@ -1,7 +1,7 @@
 const db = require("../db");
 
 async function createClass(name, teachercode, studentcode, schoolcode) {
-    new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         const query = "INSERT INTO class (name, teachercode, studentcode, schoolcode) VALUES (?,?,?,?)";
         db.query(query, [name, teachercode, studentcode, schoolcode], (error, result) => {
             if (error) {
@@ -14,7 +14,7 @@ async function createClass(name, teachercode, studentcode, schoolcode) {
 }
 
 async function enterClass(name, code, userId) {
-    new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         const query1 = "SELECT id FROM class WHERE name = ?";
         const classId = db.query(query1, [name], (error1, result1) => {
             if (error1) {
@@ -59,7 +59,7 @@ async function enterClass(name, code, userId) {
 }
 
 async function getSchoolClass(userId, userType) {
-    new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         if (userType == "student") {
             const query = "SELECT classid FROM studentclass WHERE studentid = ?";
             const classesId = db.query(query, [userId], (error, result) => {
@@ -107,7 +107,7 @@ async function getSchoolClass(userId, userType) {
         }
 
         else{
-
+            return reject(error);
         }
     })
 }
