@@ -45,7 +45,7 @@ async function createChampionshipModel(name, participantcode, admcode, id, userT
   })
 }
 
-async function excludeChampionshipModel(championshipName, id, userType) {
+async function excludeChampionshipModel(championshipName, id) {
   new Promise((resolve, reject) => {
     
     const query1 = "SELECT id FROM school WHERE name = ?";

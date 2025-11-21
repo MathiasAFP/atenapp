@@ -22,7 +22,7 @@ class _SchoolLoginViewState extends State<SchoolLoginView> {
     if (signupStatus == "Escola fez login com sucesso") {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => UserPageView()),
+        MaterialPageRoute(builder: (context) => SchoolPageView()),
       );
     } else {
       showModalBottomSheet(

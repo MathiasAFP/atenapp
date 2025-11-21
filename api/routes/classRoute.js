@@ -4,7 +4,7 @@ const classController = require('../controllers/classController');
 const jwtMiddleware = require('../controllers/otherControllers/jwtMiddlewareController');
 
 
-// routes mounted at /class getSchoolClass
+// routes mounted at /class 
 
 router.post('/createclass', jwtMiddleware.jwtMiddleware, classController.createClass);
 router.post('/enterclass', jwtMiddleware.jwtMiddleware, classController.enterClass);

@@ -25,7 +25,7 @@ Future<dynamic> enterClass(name, code) async {
 
 Future<dynamic> getSchoolClass() async {
   return await defaultConnection(
-    "/class/enterclass",
+    "/class/getclass",
     "GET",
     body: {},
   );

@@ -15,8 +15,6 @@ async function createClass(name, teachercode, studentcode, schoolcode) {
 
 async function enterClass(name, code, userId) {
     new Promise((resolve, reject) => {
-        //pegar o id da turma
-        //inserir no relacionamento caso o código for válido
         const query1 = "SELECT id FROM class WHERE name = ?";
         const classId = db.query(query1, [name], (error1, result1) => {
             if (error1) {

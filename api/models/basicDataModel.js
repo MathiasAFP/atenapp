@@ -67,19 +67,43 @@ async function userGeneralBasicDataModel(id) {
 
 async function studentGeneralBasicDataModel(id) {
   new Promise((resolve, reject) => {
-    
+    const query1 = "SELECT * FROM student WHERE id = ?";
+    db.query(query1, [id], (error1, result1) => {
+      if (error1) {
+        return reject(error1);
+      }
+      else{
+        return resolve(result1[0]);
+      }
+    })
   })
 }
 
 async function teacherGeneralBasicDataModel(id) {
   new Promise((resolve, reject) => {
-    
+    const query1 = "SELECT * FROM teacher WHERE id = ?";
+    db.query(query1, [id], (error1, result1) => {
+      if (error1) {
+        return reject(error1);
+      }
+      else{
+        return resolve(result1[0]);
+      }
+    })
   })
 }
 
 async function schoolGeneralBasicDataModel(id) {
   new Promise((resolve, reject) => {
-    
+    const query1 = "SELECT * FROM school WHERE id = ?";
+    db.query(query1, [id], (error1, result1) => {
+      if (error1) {
+        return reject(error1);
+      }
+      else{
+        return resolve(result1[0]);
+      }
+    })
   })
 }
 
