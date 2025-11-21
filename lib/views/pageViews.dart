@@ -1,3 +1,4 @@
+import 'package:Atena/views/schoolViews/createClassView/createClassView.dart';
 import 'package:Atena/views/schoolViews/profileView/schoolProfileView.dart';
 import 'package:Atena/views/studentViews/profileView/studentProfileView.dart';
 import 'package:Atena/views/teacherViews/profileView/teacherProfileView.dart';
@@ -50,14 +51,11 @@ class TeacherPageView extends StatelessWidget {
 class SchoolPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => PageView(
-      controller: PageController(initialPage: 2),
+      controller: PageController(initialPage: 0),
       scrollDirection: Axis.horizontal,
       children: [
-        LeagueScreen(),
-        LeagueScreen(),
         SchoolProfileView(),
-        LeagueScreen(),
-        LeagueScreen()
+        CreateClassViewScreen()
       ],
     );
 }
