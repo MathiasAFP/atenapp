@@ -1,5 +1,6 @@
 import 'package:Atena/views/schoolViews/createClassView/createClassView.dart';
 import 'package:Atena/views/schoolViews/profileView/schoolProfileView.dart';
+import 'package:Atena/views/studentViews/classesView/studentClassesView.dart';
 import 'package:Atena/views/studentViews/profileView/studentProfileView.dart';
 import 'package:Atena/views/teacherViews/profileView/teacherProfileView.dart';
 import 'package:Atena/views/userViews/profileView/profileView.dart';
@@ -25,14 +26,11 @@ class UserPageView extends StatelessWidget {
 class StudentPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => PageView(
-      controller: PageController(initialPage: 2),
+      controller: PageController(initialPage: 0),
       scrollDirection: Axis.horizontal,
       children: [
-        LeagueScreen(),
-        LeagueScreen(),
         StudentProfileView(),
-        LeagueScreen(),
-        LeagueScreen()
+        StudentClassesViewScreen()
       ],
     );
 }

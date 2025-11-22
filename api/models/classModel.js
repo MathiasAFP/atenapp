@@ -1,61 +1,56 @@
 const db = require("../db");
 
 async function createClass(name, teachercode, studentcode, schoolcode) {
-    return new Promise((resolve, reject) => { 
+    return new Promise((resolve, reject) => {
         const query = "INSERT INTO class (name, teachercode, studentcode, schoolcode) VALUES (?,?,?,?)";
         db.query(query, [name, teachercode, studentcode, schoolcode], (error, result) => {
-            if (error) {
-                return resolve(false);
-            } else {
-                return resolve(true);
-            }
+        if (error) {
+            console.error("MySQL error:", error);
+            return reject(error);
+        }
+        else {
+            return resolve(result);
+        }
         })
     })
 }
 
 async function enterClass(name, code, userId) {
     return new Promise((resolve, reject) => {
-        const query1 = "SELECT id FROM class WHERE name = ?";
-        const classId = db.query(query1, [name], (error1, result1) => {
+        const query1 = "SELECT * FROM class WHERE name = ?";
+        
+        db.query(query1, [name], (error1, result1) => {
             if (error1) {
                 return reject(error1);
             }
-        })
-
-        const query2 = "SELECT * FROM class WHERE id = ?"
-        const selectedClass = db.query(query2, [classId], (error2, result2) => {
-            if (error2) {
-                return reject(error2);
+            
+            if (result1.length === 0) {
+                return reject(new Error("Turma não encontrada"));
             }
-        })
 
+            const turma = result1[0]; 
+            const classId = turma.id; 
 
-        const query3 = "INSERT INTO teacherclass (teacherid, classid) VALUES (?,?)";
-        const query4 = "INSERT INTO studentclass (studentid, classid) VALUES (?,?)";
-        if (code == selectedClass[0]["teachercode"]) {
-            db.query(query3, [userId, classId], (error3, result3) => {
-                if (error3) {
-                    return reject(error3);
-                } else {
+            const queryTeacher = "INSERT INTO teacherclass (teacher_id, class_id) VALUES (?,?)";
+            const queryStudent = "INSERT INTO studentclass (student_id, class_id) VALUES (?,?)";
+
+            if (code == turma.teachercode) {
+                db.query(queryTeacher, [userId, classId], (error3, result3) => {
+                    if (error3) return reject(error3);
                     return resolve(result3);
-                }
-            })
-        }
-
-        else if (code == selectedClass[0]["studentcode"]) {
-            db.query(query4, [userId, classId], (error4, result4) => {
-                if (error4) {
-                    return reject(error4);
-                } else {
+                });
+            } 
+            else if (code == turma.studentcode) {
+                db.query(queryStudent, [userId, classId], (error4, result4) => {
+                    if (error4) return reject(error4);
                     return resolve(result4);
-                }
-            })
-        }
-        else{
-            return reject(error);
-        }
-
-    })
+                });
+            } 
+            else {
+                return reject(new Error("Código de acesso inválido"));
+            }
+        });
+    });
 }
 
 async function getSchoolClass(userId, userType) {

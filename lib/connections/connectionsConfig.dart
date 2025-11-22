@@ -3,7 +3,7 @@ import 'package:Atena/main.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-final baseUrl = "https://atenapp.onrender.com";
+final baseUrl = "http://192.168.1.2:3000";
 
 Future<void> saveTokenCredentialConnection(String token) async {
   final prefs = await SharedPreferences.getInstance();
