@@ -23,7 +23,6 @@ async function createChampionshipController(req, res) {
   }
 }
 
-
 async function excludeChampionshipController(req, res) {
     const { id, userType } = req.userData;
     const { championshipName } = req.body;
@@ -85,7 +84,8 @@ async function createChampionshipEventBlockController(req, res) {
 async function getYourChampionshipsController(req, res) {
     const { id, userType } = req.userData;
     try {
-        const yourChampionships = await championshipModel.getYourChampionshipsModel;
+        const yourChampionships = await championshipModel.getStudentChampionshipsModel(id, userType);
+        console.log(yourChampionships);
         if (yourChampionships) {
             res.status(200).json({message:yourChampionships});
         } else {
@@ -94,6 +94,8 @@ async function getYourChampionshipsController(req, res) {
     } catch (error) {
         return res.status(500).json({message:"Erro crítico"});
     }
+
+
 
 }
 

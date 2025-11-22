@@ -48,7 +48,6 @@ async function createChampionshipModel(name, code, id, userType) {
   });
 }
 
-
 async function enterChampionshipModel(name, code, id) {
   return new Promise((resolve, reject) => {
     const query1 = "SELECT * FROM championship WHERE name = ?";
@@ -73,16 +72,44 @@ async function enterChampionshipModel(name, code, id) {
   })
 }
 
-async function getStudentChampionshipsModel(id) {
-  new Promise((resolve, reject) => {
-    const query = "SELECT * FROM studentchampionship WHERE studentid = ?";
-    db.query(query, [id], (error, result) => {
-      if (error) {
-        return reject(error);
-      } else {
-        return resolve(result);
-      }
-    })
+async function getStudentChampionshipsModel(id, userType) {
+  return new Promise((resolve, reject) => {
+    if (userType == "student") {
+      const query1 = "SELECT championshipid FROM studentchampionship";
+      db.query(query1, [id], (error1, result1) => {
+        if (error1) {
+          return reject(error1);
+        } else {
+          const query2 = "SELECT * FROM championship WHERE id = ?";
+          db.query(query2, [result1], (error2, result2) => {
+            if (error2) {
+              return reject(error2);
+            } else {
+              return resolve(result2);
+            }
+          })
+        }
+      })
+    } else if (userType == "teacher") {
+      const query3 = "SELECT * FROM championship WHERE teacherid = ?";
+      db.query(query3, [id], (error3, result3) => {
+        if (error3) {
+          return reject(error3);
+        } else {
+          return resolve(result3);
+        }
+      })
+    }
+    else{
+      const query4 = "SELECT * FROM championship WHERE schoolid = ?";
+      db.query(query4, [id], (error4, result4) => {
+        if (error4) {
+          return reject(error4);
+        } else {
+          return resolve(result4);
+        }
+      })
+    }
   })
 }
 

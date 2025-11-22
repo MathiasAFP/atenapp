@@ -6,4 +6,10 @@ class ChampionshipClass {
     return await createChampionshipConnection(name, code);
   }
 
+  Future<List<dynamic>> getChampionships() async {
+    final yChamps = await getChampionshipsConnection();
+    print(yChamps);
+    return yChamps;
+  }
+
 }

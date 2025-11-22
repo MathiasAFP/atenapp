@@ -56,7 +56,7 @@ Future<dynamic> excludeChampionship(championshipName) async {
   );
 }
 
-Future<dynamic> getChampionships() async {
+Future<dynamic> getChampionshipsConnection() async {
   return await defaultConnection(
     "/championship/getchampionships",
     "GET",
