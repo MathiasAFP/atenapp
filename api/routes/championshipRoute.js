@@ -10,7 +10,9 @@ router.post('/searchchampionship', jwtMiddlewareController.jwtMiddleware, champi
 router.post('/enterchampionship', jwtMiddlewareController.jwtMiddleware, championshipController.enterChampionshipController);
 router.post('/createvent', jwtMiddlewareController.jwtMiddleware, championshipController.createChampionshipEventController);
 router.post('/excludechampionship', jwtMiddlewareController.jwtMiddleware, championshipController.excludeChampionshipController);
+router.post('/gettopics', jwtMiddlewareController.jwtMiddleware, championshipController.getTopicsController);
+router.post('/getsubtopics', jwtMiddlewareController.jwtMiddleware, championshipController.getSubtopicsController);
 router.get('/getchampionships', jwtMiddlewareController.jwtMiddleware, championshipController.getYourChampionshipsController);
+router.get('/getsubjects', jwtMiddlewareController.jwtMiddleware, championshipController.getSubjectsController);
 
-
-module.exports = router;
+module.exports = router; 

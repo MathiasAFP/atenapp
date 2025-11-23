@@ -1,4 +1,5 @@
 import 'package:Atena/classes/championshipClass.dart';
+import 'package:Atena/views/teacherViews/championshipView/chooseFilteredQuestionsForBlockView.dart';
 import 'package:flutter/material.dart';
 
 ChampionshipClass championshipClassInstance = ChampionshipClass();
@@ -21,6 +22,7 @@ class _CreateChampionshipEventViewScreenState extends State<CreateChampionshipEv
   //deve aparecer a rodada do momento e a opção de incerrar ela
   //nela tb ficam as estatísticas
   //o professor pd ver as stats gerais clicando em um btn nessa tela
+  //a inserção de blocos é feita e salva no banco antes msm da rodada ser criada, quando for, o id da rodada muda e a ultima é excluída
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Rodada")),
@@ -32,7 +34,7 @@ class _CreateChampionshipEventViewScreenState extends State<CreateChampionshipEv
             ElevatedButton(onPressed: (){}, child: Text("Questões do banco")),
           ]),
           Row(children: [
-            ElevatedButton(onPressed: (){}, child: Text("Questões filtradas")),
+            ElevatedButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => ChooseFilteredQuestionsForBlockViewScreen()));}, child: Text("Questões filtradas")),
             ElevatedButton(onPressed: (){}, child: Text("Lições"))
           ])
         ])),

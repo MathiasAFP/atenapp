@@ -113,8 +113,50 @@ async function getStudentChampionshipsModel(id, userType) {
   })
 }
 
+async function getSubjectsModel() {
+  return new Promise((resolve, reject) => {
+    const query1 = "SELECT DISTINCT subject FROM content";
+    db.query(query1, [], (error1, result1) => {
+      if (error1) {
+        return reject(error1);
+      } else {
+        return resolve(result1)
+      }
+    })
+  }
+)}
+
+async function getTopicModel(subject) {
+  return new Promise((resolve, reject) => {
+    const query1 = "SELECT DISTINCT topic FROM content WHERE subject = ?";
+    db.query(query1, [subject], (error1, result1) => {
+      if (error1) {
+        return reject(error1);
+      } else {
+        return resolve(result1)
+      }
+    })
+  }
+)}
+
+async function getSubtopicModel(topic) {
+  return new Promise((resolve, reject) => {
+    const query1 = "SELECT DISTINCT subtopic FROM content WHERE topic = ?";
+    db.query(query1, [topic], (error1, result1) => {
+      if (error1) {
+        return reject(error1);
+      } else {
+        return resolve(result1)
+      }
+    })
+  }
+)}
+
 module.exports = {
   createChampionshipModel,
   enterChampionshipModel,
-  getStudentChampionshipsModel
+  getStudentChampionshipsModel,
+  getSubjectsModel,
+  getTopicModel,
+  getSubtopicModel
 };

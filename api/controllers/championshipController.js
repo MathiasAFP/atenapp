@@ -99,11 +99,61 @@ async function getYourChampionshipsController(req, res) {
 
 }
 
+async function getSubjectsController(req, res) {
+    const { id, userType } = req.userData;
+    try {
+        const content = await championshipModel.getSubjectsModel();
+        console.log(content);
+        if (content) {
+            return res.status(200).json({message:content});
+        } else {
+            return res.status(500).json({message:"Erro ao buscar conteúdos"});
+        }
+    } catch (error) {
+        return res.status(500).json({message:"Erro crítico"})
+    }
+}
+
+async function getTopicsController(req, res) {
+    const { id, userType } = req.userData;
+    const {subject} = req.body;
+    try {
+        const content = await championshipModel.getTopicModel(subject);
+        console.log(content);
+        if (content) {
+            return res.status(200).json({message:content});
+        } else {
+            return res.status(500).json({message:"Erro ao buscar conteúdos"});
+        }
+    } catch (error) {
+        return res.status(500).json({message:"Erro crítico"})
+    }
+}
+
+async function getSubtopicsController(req, res) {
+    const { id, userType } = req.userData;
+    const {topic} = req.body;
+    try {
+        const content = await championshipModel.getSubtopicModel(topic);
+        console.log(content);
+        if (content) {
+            return res.status(200).json({message:content});
+        } else {
+            return res.status(500).json({message:"Erro ao buscar conteúdos"});
+        }
+    } catch (error) {
+        return res.status(500).json({message:"Erro crítico"})
+    }
+}
+
 module.exports = {
     createChampionshipController,
     searchChampionshipController,
     enterChampionshipController,
     createChampionshipEventController,
     getYourChampionshipsController,
-    excludeChampionshipController
+    excludeChampionshipController,
+    getSubjectsController,
+    getTopicsController,
+    getSubtopicsController
 };

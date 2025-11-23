@@ -62,3 +62,71 @@ Future<dynamic> getChampionshipsConnection() async {
     "GET",
   );
 }
+
+Future<dynamic> getSubjectsForChampionshipBlockConnection() async {
+  return await defaultConnection(
+    "/championship/getsubjects",
+    "GET",
+    body: {},
+  ); 
+}
+
+Future<dynamic> getSubtopicsForChampionshipBlockConnection(topic) async {
+  return await defaultConnection(
+    "/championship/getsubtopics",
+    "POST",
+    body: {
+      "topic":topic
+    },
+  ); 
+}
+
+Future<dynamic> getTopicsForChampionshipBlockConnection(subject) async {
+  return await defaultConnection(
+    "/championship/gettopics",
+    "POST",
+    body: {
+      "subject":subject
+    },
+  ); 
+}
+
+Future<dynamic> createYourQuestionsChampionshipBlock(championshipName) async {
+  return await defaultConnection(
+    "/championship/excludechampionship",
+    "POST",
+    body: {
+      "championshipName": championshipName
+    },
+  );
+}
+
+Future<dynamic> createQuestionsChampionshipBlock(championshipName) async {
+  return await defaultConnection(
+    "/championship/excludechampionship",
+    "POST",
+    body: {
+      "championshipName": championshipName
+    },
+  );
+}
+
+Future<dynamic> createFilteredQuestionsChampionshipBlock(championshipName) async {
+  return await defaultConnection(
+    "/championship/excludechampionship",
+    "POST",
+    body: {
+      "championshipName": championshipName
+    },
+  );
+}
+
+Future<dynamic> createLessonChampionshipBlock(championshipName) async {
+  return await defaultConnection(
+    "/championship/excludechampionship",
+    "POST",
+    body: {
+      "championshipName": championshipName
+    },
+  );
+}
