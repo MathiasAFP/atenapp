@@ -151,7 +151,6 @@ class _ChooseFilteredQuestionsForBlockViewScreenState
                   },
                 ),
 
-              /// Dificuldade 1-3
               if (selectedSubtopic != null)
                 buildDropdown(
                   label: "Dificuldade (1-3)",
@@ -163,7 +162,6 @@ class _ChooseFilteredQuestionsForBlockViewScreenState
                   },
                 ),
 
-              /// Quantidade
               if (selectedDifficulty != null)
                 buildDropdown(
                   label: "Quantidade",
@@ -177,16 +175,20 @@ class _ChooseFilteredQuestionsForBlockViewScreenState
 
               SizedBox(height: 30),
 
-              /// Botão final
               if (selectedQuantity != null)
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 40, vertical: 18),
+                      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 18),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14))),
                   onPressed: () {
-                    championshipClassInstance.addNotConfirmedFilteredQuestions(selectedSubtopic, selectedDifficulty, selectedQuantity);
+                    Navigator.pop(context, {
+                      "subject": selectedSubject,
+                      "topic": selectedTopic,
+                      "subtopic": selectedSubtopic,
+                      "difficulty": selectedDifficulty,
+                      "quantity": selectedQuantity
+                    });
                   },
                   child: Text("Confirmar filtros",
                       style: TextStyle(fontSize: 18)),

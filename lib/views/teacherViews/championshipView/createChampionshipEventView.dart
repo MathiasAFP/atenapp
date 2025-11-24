@@ -10,42 +10,84 @@ class CreateChampionshipEventViewScreen extends StatefulWidget {
 
   const CreateChampionshipEventViewScreen({
     super.key,
-    required this.championshipId
+    required this.championshipId,
   });
   
   @override
-  State<CreateChampionshipEventViewScreen> createState() => _CreateChampionshipEventViewScreenState();
+  State<CreateChampionshipEventViewScreen> createState() =>
+      _CreateChampionshipEventViewScreenState();
 }
 
-class _CreateChampionshipEventViewScreenState extends State<CreateChampionshipEventViewScreen> {
+class _CreateChampionshipEventViewScreenState
+    extends State<CreateChampionshipEventViewScreen> {
+
   @override
-  //deve aparecer a rodada do momento e a opção de incerrar ela
-  //nela tb ficam as estatísticas
-  //o professor pd ver as stats gerais clicando em um btn nessa tela
-  //a inserção de blocos é feita e salva no banco antes msm da rodada ser criada, quando for, o id da rodada muda e a ultima é excluída
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Rodada")),
-      body: Center(child: Column(children: [
-        Card(child: Column(children: [
-          Text("Adicionar rodada"),
-          Row(children: [
-            ElevatedButton(onPressed: (){}, child: Text("Questões próprias")),
-            ElevatedButton(onPressed: (){}, child: Text("Questões do banco")),
-          ]),
-          Row(children: [
-            ElevatedButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => ChooseFilteredQuestionsForBlockViewScreen()));}, child: Text("Questões filtradas")),
-            ElevatedButton(onPressed: (){}, child: Text("Lições"))
-          ])
-        ])),
-        FutureBuilder(future: championshipClassInstance.takeAndSaveChampionshipEvent(), builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {}
+      body: Center(
+        child: Column(
+          children: [
+            Card(
+              child: Column(
+                children: [
+                  Text("Adicionar rodada"),
+                  Row(
+                    children: [
+                      ElevatedButton(onPressed: (){}, child: Text("Questões próprias")),
+                      ElevatedButton(onPressed: (){}, child: Text("Questões do banco")),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          final createdBlock = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  ChooseFilteredQuestionsForBlockViewScreen(),
+                            ),
+                          );
 
-          if (snapshot.hasData) {}
+                          if (createdBlock != null) {
+                            championshipClassInstance.notConfirmedFilteredQuestions.add(createdBlock);
+                            setState(() {});
+                          }
+                        },
+                        child: Text("Questões filtradas"),
+                      ),
+                      ElevatedButton(onPressed: (){}, child: Text("Lições")),
+                    ],
+                  )
+                ],
+              ),
+            ),
 
-          return Text("Nenhuma rodada encontrada");
+            /// só mostra se tiver algo
+            if (championshipClassInstance.notConfirmedFilteredQuestions.isNotEmpty)
+              Text(
+                championshipClassInstance.notConfirmedFilteredQuestions.toString(),
+              ),
 
-        })
-      ])));
+            FutureBuilder(
+              future: championshipClassInstance.takeAndSaveChampionshipEvent(),
+              builder: (context, snapshot) {
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                }
+
+                if (snapshot.hasData) {
+                  return Text("Rodada carregada");
+                }
+
+                return Text("Nenhuma rodada encontrada");
+              },
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
