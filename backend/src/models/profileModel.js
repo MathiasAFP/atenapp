@@ -7,7 +7,7 @@ async function getBasicDataModel(id, userType) {
             if (error1) {
                 return reject(false);
             }
-            return resolve(result1);
+            return resolve(result1[0]);
         })
     })
 }
