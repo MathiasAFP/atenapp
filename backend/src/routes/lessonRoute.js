@@ -4,5 +4,7 @@ const lessonController = require('../controllers/lessonController');
 const jwtMiddleware = require('../jwtMiddleware');
 
 router.get('/getsubjects', jwtMiddleware.verifyToken, lessonController.getSubjectsController);
+router.post('/gettopic', jwtMiddleware.verifyToken, lessonController.getTopicController);
+router.post('/getsubtopic', jwtMiddleware.verifyToken, lessonController.getSubTopicController);
 
 module.exports = router;

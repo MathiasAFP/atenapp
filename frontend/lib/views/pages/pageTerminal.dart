@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teste/views/pages/allPages/config.dart';
-import 'package:teste/views/pages/userPages/lesson.dart';
+import 'package:teste/views/pages/userPages/lessonSubjects.dart';
 import 'package:teste/views/pages/userPages/profile.dart';
 
 class UserPageView extends StatelessWidget {
@@ -10,7 +10,7 @@ class UserPageView extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       children: [
         Profile(),
-        Lesson(),
+        LessonSubjects(),
         Config()
       ],
     );

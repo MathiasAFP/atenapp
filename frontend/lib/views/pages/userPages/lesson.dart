@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:teste/connections/lessonConnection.dart';
+import 'package:teste/classes/lessonClass.dart';
+import 'package:teste/views/pages/userPages/lessonTopics.dart';
+
+LessonClass lessonClassInstance = LessonClass();
+bool hasData = false;
 
 class Lesson extends StatefulWidget{
+  final String subTopicName;
+  const Lesson({Key? key, required this.subTopicName}) : super(key: key);
   @override
   State<Lesson> createState() => _LessonState();
 }
@@ -9,19 +15,6 @@ class Lesson extends StatefulWidget{
 class _LessonState extends State<Lesson> {
   @override
   Widget build(BuildContext context) {
-    return(
-      FutureBuilder(future: getSubjectsConnection({}), builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return (CircularProgressIndicator());
-          }
-
-          if (snapshot.hasData) {
-            return (Scaffold(body: Center(child: Text("Lessons"))));
-          }
-
-          return(Image.network("https://static.vecteezy.com/system/resources/thumbnails/024/405/934/small/icon-tech-error-404-icon-isolated-png.png"));
-        }
-      )
-    );
+    return Scaffold(body: Center(child: Text(widget.subTopicName)));
   }
 }
