@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teste/classes/lessonClass.dart';
-import 'package:teste/views/pages/userPages/lessonTopics.dart';
+import 'package:teste/views/pages/userPages/lessonPages/lessonTopics.dart';
 
 LessonClass lessonClassInstance = LessonClass();
 bool hasData = false;
