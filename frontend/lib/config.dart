@@ -56,11 +56,9 @@ class ConfigClass extends ChangeNotifier {
         elevation: 0,
         centerTitle: true,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         elevation: 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         color: _isDark ? _darkSurface : _lightSurface,
       ),
       inputDecorationTheme: InputDecorationTheme(
