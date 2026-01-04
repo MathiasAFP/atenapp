@@ -124,136 +124,272 @@ class _ChecklistPageState extends State<ChecklistPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final completedCount = _items.where((item) => item.isCompleted).length;
+    
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Checklist de Viagem'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: _logout,
-            tooltip: 'Sair',
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              theme.colorScheme.primary.withOpacity(0.1),
+              theme.colorScheme.background,
+            ],
           ),
-        ],
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: _textController,
-                          decoration: InputDecoration(
-                            labelText: 'Adicionar item',
-                            hintText: 'Ex: Passaporte, Roupas, Câmera...',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 12,
-                            ),
-                          ),
-                          onSubmitted: (_) => _addItem(),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      FloatingActionButton(
-                        onPressed: _addItem,
-                        child: const Icon(Icons.add),
-                      ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Header
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      theme.colorScheme.primary,
+                      theme.colorScheme.secondary,
                     ],
                   ),
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                  ),
                 ),
-                if (_items.isEmpty)
-                  Expanded(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.checklist_rtl,
-                            size: 80,
-                            color: Colors.grey[400],
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Minha Viagem',
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                letterSpacing: -0.5,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '${_items.length} itens • $completedCount concluídos',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white.withOpacity(0.9),
+                              ),
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                          onPressed: _logout,
+                          icon: const Icon(Icons.logout_rounded),
+                          color: Colors.white,
+                          tooltip: 'Sair',
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    // Campo de adicionar
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 15,
+                            offset: const Offset(0, 5),
                           ),
-                          const SizedBox(height: 16),
-                          Text(
-                            'Nenhum item adicionado',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.grey[600],
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _textController,
+                              decoration: InputDecoration(
+                                hintText: 'Adicionar novo item...',
+                                border: InputBorder.none,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                  vertical: 16,
+                                ),
+                                hintStyle: TextStyle(
+                                  color: Colors.grey.shade400,
+                                ),
+                              ),
+                              onSubmitted: (_) => _addItem(),
                             ),
                           ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Adicione itens à sua lista de viagem',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey[500],
+                          Container(
+                            margin: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  theme.colorScheme.primary,
+                                  theme.colorScheme.secondary,
+                                ],
+                              ),
+                              shape: BoxShape.circle,
+                            ),
+                            child: IconButton(
+                              onPressed: _addItem,
+                              icon: const Icon(Icons.add_rounded),
+                              color: Colors.white,
                             ),
                           ),
                         ],
                       ),
                     ),
-                  )
-                else
-                  Expanded(
-                    child: ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: _items.length,
-                      itemBuilder: (context, index) {
-                        final item = _items[index];
-                        return Card(
-                          margin: const EdgeInsets.only(bottom: 8),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                  ],
+                ),
+              ),
+              
+              // Lista de itens
+              Expanded(
+                child: _isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : _items.isEmpty
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 120,
+                                  height: 120,
+                                  decoration: BoxDecoration(
+                                    color: theme.colorScheme.primary.withOpacity(0.1),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.checklist_rtl_rounded,
+                                    size: 60,
+                                    color: theme.colorScheme.primary.withOpacity(0.5),
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                Text(
+                                  'Nenhum item ainda',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Adicione itens à sua lista de viagem',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey.shade500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        : ListView.builder(
+                            padding: const EdgeInsets.all(16),
+                            itemCount: _items.length,
+                            itemBuilder: (context, index) {
+                              final item = _items[index];
+                              return Dismissible(
+                                key: Key(item.id),
+                                direction: DismissDirection.endToStart,
+                                background: Container(
+                                  margin: const EdgeInsets.only(bottom: 12),
+                                  alignment: Alignment.centerRight,
+                                  decoration: BoxDecoration(
+                                    color: theme.colorScheme.tertiary,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  padding: const EdgeInsets.only(right: 20),
+                                  child: const Icon(
+                                    Icons.delete_rounded,
+                                    color: Colors.white,
+                                    size: 28,
+                                  ),
+                                ),
+                                onDismissed: (direction) {
+                                  _deleteItem(index);
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.only(bottom: 12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.05),
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ],
+                                  ),
+                                  child: ListTile(
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                      vertical: 8,
+                                    ),
+                                    leading: GestureDetector(
+                                      onTap: () => _toggleItem(index),
+                                      child: Container(
+                                        width: 32,
+                                        height: 32,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: item.isCompleted
+                                                ? theme.colorScheme.secondary
+                                                : Colors.grey.shade300,
+                                            width: 2,
+                                          ),
+                                          color: item.isCompleted
+                                              ? theme.colorScheme.secondary
+                                              : Colors.transparent,
+                                        ),
+                                        child: item.isCompleted
+                                            ? const Icon(
+                                                Icons.check_rounded,
+                                                color: Colors.white,
+                                                size: 20,
+                                              )
+                                            : null,
+                                      ),
+                                    ),
+                                    title: Text(
+                                      item.text,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        decoration: item.isCompleted
+                                            ? TextDecoration.lineThrough
+                                            : null,
+                                        color: item.isCompleted
+                                            ? Colors.grey.shade400
+                                            : Colors.grey.shade800,
+                                      ),
+                                    ),
+                                    trailing: IconButton(
+                                      icon: Icon(
+                                        Icons.delete_outline_rounded,
+                                        color: Colors.grey.shade400,
+                                      ),
+                                      onPressed: () => _deleteItem(index),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
-                          child: ListTile(
-                            leading: Checkbox(
-                              value: item.isCompleted,
-                              onChanged: (_) => _toggleItem(index),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                            ),
-                            title: Text(
-                              item.text,
-                              style: TextStyle(
-                                decoration: item.isCompleted
-                                    ? TextDecoration.lineThrough
-                                    : null,
-                                color: item.isCompleted
-                                    ? Colors.grey
-                                    : null,
-                              ),
-                            ),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.delete_outline),
-                              color: Colors.red,
-                              onPressed: () => _deleteItem(index),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                if (_items.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      'Total: ${_items.length} item${_items.length != 1 ? 's' : ''} | Concluídos: ${_items.where((item) => item.isCompleted).length}',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
-
