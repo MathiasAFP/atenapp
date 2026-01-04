@@ -1,39 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-
-import 'config.dart'; 
-import 'package:teste/views/pages/pageTerminal.dart';
-import 'package:teste/views/pages/allPages/signup.dart';
-import 'connections/connectionFunctions.dart'; 
-import 'firebase_options.dart';
-
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+import 'package:shared_preferences/shared_preferences.dart';
+import 'config.dart';
+import 'pages/login_page.dart';
+import 'pages/register_page.dart';
+import 'pages/checklist_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform
-  );
-
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-  NotificationSettings settings = await messaging.requestPermission(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
-
-  if (settings.authorizationStatus == AuthorizationStatus.authorized ||
-      settings.authorizationStatus == AuthorizationStatus.provisional) {
-    final token = await messaging.getToken();
-    print('FCM TOKEN: $token');
-  } else {
-    print('Permissão de notificação negada');
-  }
-
+  
   runApp(
     ChangeNotifierProvider(
       create: (_) => ConfigClass(),
@@ -50,26 +25,34 @@ class MyApp extends StatelessWidget {
     return Consumer<ConfigClass>(
       builder: (context, config, child) {
         return MaterialApp(
-          navigatorKey: navigatorKey,
-         title: 'Projeto Teste',
+          title: 'Checklist de Viagem',
           debugShowCheckedModeBanner: false,
           theme: config.getThemeData(),
-          home: FutureBuilder<String?>(
-            future: getJWT(),
+          routes: {
+            '/login': (context) => const LoginPage(),
+            '/register': (context) => const RegisterPage(),
+          },
+          home: FutureBuilder<bool>(
+            future: _checkLoginStatus(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Scaffold(
-                  body: Center(child: CircularProgressIndicator())
+                  body: Center(child: CircularProgressIndicator()),
                 );
               }
-              if (snapshot.hasData && snapshot.data != null && snapshot.data!.isNotEmpty) {
-                return UserPageView();
+              if (snapshot.hasData && snapshot.data == true) {
+                return const ChecklistPage();
               }
-              return const Signup();
+              return const LoginPage();
             },
           ),
         );
       },
     );
+  }
+
+  Future<bool> _checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('is_logged_in') ?? false;
   }
 }
